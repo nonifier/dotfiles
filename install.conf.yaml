@@ -1,3 +1,13 @@
+- defaults:
+    link:
+        create: true
+        relink: true
+
 - clean: []
-- link: {}
-- shell: []
+
+- link: 
+    ~/.gitignore: config/git/gitignore
+    ~/.gitconfig: config/git/gitconfig
+
+- shell:
+    - echo Yoooooooo

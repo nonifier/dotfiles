@@ -1,0 +1,6 @@
+.vscode/
+./build/
+*tags
+.pdbrc.py
+CMakeGraphVizOptions.cmake
+*.bak.py
