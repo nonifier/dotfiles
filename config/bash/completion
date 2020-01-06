@@ -1,0 +1,7 @@
+#1 /bin/bash
+
+# Load Git auto completion
+if [ -e /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh ]; then
+    source /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh
+fi
+
