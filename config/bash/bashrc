@@ -1,0 +1,91 @@
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+#----------------------
+# Aggregate history
+#----------------------
+
+# When the shell exits, append to the history file instead of overwriting it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=5000
+HISTFILESIZE=8000
+HISTCONTROL=ignoreboth:erasedups # See bash(1) for more options
+
+# After each command, append to the history file and reread it
+PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+
+# Define Nvim as the default EDITOR !
+if [[ -x `which nvim` ]]; 
+then export EDITOR=`which nvim`; 
+else sudo apt install neovim; 
+fi
+
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+[ -f ~/.bash_aliases ] && source ~/.bash_aliases
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    . /etc/bash_completion
+fi
+
+# Custom bash configuration
+[ -f ~/.config/bash/exports ] && source ~/.config/bash/exports
+[ -f ~/.config/bash/aliases ] && source ~/.config/bash/aliases
+[ -f ~/.config/bash/functions ] && source ~/.config/bash/functions
+[ -f ~/.config/bash/completion ] && source ~/.config/bash/completion
+[ -f ~/.config/bash/navitia ] && source ~/.config/bash/navitia
+[ -f ~/.config/bash/prompt ] && source ~/.config/bash/prompt
+
+# added by travis gem
+[ -f /home/ogeorget/.travis/travis.sh ] && source /home/ogeorget/.travis/travis.sh
+
+# FZF !
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+##################################################################
+#
+#   VirtualEnvWrapper
+#
+__virtualEnvWrapper() {
+    export WORKON_HOME=$HOME/.virtualenvs
+    export PROJECT_HOME=$HOME/Devel
+    source $HOME/.local/bin/virtualenvwrapper.sh
+}
+
+if [ -f $HOME/.local/bin/virtualenvwrapper.sh ];then
+    __virtualEnvWrapper
+else
+    pip install --user virtualenvwrapper
+    __virtualEnvWrapper
+fi
+
+

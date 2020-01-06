@@ -8,6 +8,8 @@
 - link: 
     ~/.gitignore: config/git/gitignore
     ~/.gitconfig: config/git/gitconfig
+    ~/.bashrc: config/bash/bashrc
+    ~/.config/bash: config/bash
 
 - shell:
     - echo Yoooooooo
