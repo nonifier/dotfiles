@@ -1,0 +1,91 @@
+#! /bin/bash
+
+ssh-start-agent() {
+    eval `ssh-agent`
+    ssh-add
+}
+
+urlencode() {
+    # urlencode <string>
+    local length="${#1}"
+    for (( i = 0; i < length; i++ )); do
+        local c="${1:i:1}"
+        case $c in
+            [a-zA-Z0-9.~_-]) printf "$c" ;;
+            *) printf '%s' "$c" | xxd -p -c1 |
+                   while read c; do printf '%%%s' "$c"; done ;;
+        esac
+    done
+    printf '\n'
+}
+
+urldecode() {
+    # urldecode <string>
+    local url_encoded="${1//+/ }"
+    printf '%b' "${url_encoded//%/\\x}"
+    printf '\n'
+}
+
+timestamp2human() {
+    for var in "$@"
+    do
+        echo "$var : "+`date -d @$var -u`
+    done
+}
+
+time2human() {
+    for var in "$@"
+    do
+        echo "$var : "+`date -d @$var -u +%H:%M:%S`
+    done
+}
+
+jmespath_filter() {
+    FILTER=$1; if [ ! $FILTER ]; then FILTER="*"; fi
+    python -c "import sys;import json;import jmespath; print(json.dumps(jmespath.search('$FILTER', json.loads(sys.stdin.read()))))" | json_pp | highlight -S json -O ansi
+}
+
+json_filter() {
+    jmespath_filter $1 | json_highlight
+}
+
+# call this function from prompt then customize your terminal colors how you like in the terminal/preference/settings
+# colors will change so you can see what they look like in the terminal
+display_colors (){
+	echo -e "\033[0mCOLOR_NC\tCOLOR_NO_COLOR"
+	echo -e "\033[0;30mCOLOR_BLACK\t\033[1;30mCOLOR_BRIGHT_BLACK"
+	echo -e "\033[0;31mCOLOR_RED\t\033[1;31mCOLOR_BRIGHT_RED"
+	echo -e "\033[0;32mCOLOR_GREEN\t\033[1;32mCOLOR_BRIGHT_GREEN"
+	echo -e "\033[0;33mCOLOR_YELLOW\t\033[1;33mCOLOR_BRIGHT_YELLOW"
+	echo -e "\033[0;34mCOLOR_BLUE\t\033[1;34mCOLOR_BRIGHT_BLUE"
+	echo -e "\033[0;35mCOLOR_PURPLE\t\033[1;35mCOLOR_BRIGHT_PURPLE"
+	echo -e "\033[0;36mCOLOR_CYAN\t\033[1;36mCOLOR_BRIGHT_CYAN"
+	echo -e "\033[0;37mCOLOR_WHITE\t\033[1;37mCOLOR_BRIGHT_WHITE"
+}
+
+
+create_postgres_user() {
+    NEW_USER=$1
+    NEW_PWD=$2
+    sudo -u postgres psql -c "\du" | cut -d\| -f1 | egrep -q $NEW_USER || sudo -u postgres psql -c "CREATE USER $NEW_USER WITH PASSWORD '$NEW_PWD';"
+}
+
+create_postgres_db() {
+    DB_NAME=$1
+    __create_postgres_user navitia navitia
+    sudo -u postgres psql -l | cut -d\| -f1 | egrep -q $DB_NAME || (sudo -u postgres createdb -O navitia $DB_NAME && sudo -u postgres psql -q -d $DB_NAME -c "CREATE EXTENSION postgis;")
+}
+
+virtual_env_workon_or_create() {
+    ENV_NAME=$1
+    REQUIREMENTS_FILE=$2
+    VENV=$(workon | egrep "^$ENV_NAME$")
+    if [ $VENV ]; then 
+        echo "workon $ENV_NAME"
+        workon $ENV_NAME
+    else
+        echo "mkvirtualenv $ENV_NAME"
+        mkvirtualenv $ENV_NAME -p python2 -r $REQUIREMENTS_FILE
+    fi
+}
+
