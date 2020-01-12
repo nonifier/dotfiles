@@ -1,0 +1,6 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =4
+let g:netrw_dirhist_1='/home/ogeorget/dev/kisio/source/navitia/source'
+let g:netrw_dirhist_2='/home/ogeorget/dev/kisio/source/navitia'
+let g:netrw_dirhist_3='/home/ogeorget/dev/kisio/source/navitia/source'
+let g:netrw_dirhist_4='/home/ogeorget/dev/github/usefull'

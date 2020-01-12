@@ -10,6 +10,7 @@
     ~/.gitconfig: config/git/gitconfig
     ~/.bashrc: config/bash/bashrc
     ~/.config/bash: config/bash
+    ~/.config/nvim: config/nvim
 
 - shell:
     - echo Yoooooooo
