@@ -18,18 +18,32 @@ jormungandr_create_db() {
     popd
 }
 
-ed_create_db() {
-    create_postgres_db navitia
+create_ed_db() {
+    [[ $1 ]] && DB_NAME=$1 || DB_NAME="navitia"
+
+    create_postgres_db $DB_NAME
 
     ALEMBIC_DIR="$NAVITIA_SRC_PATH/sql"
     pushd $ALEMBIC_DIR
         virtual_env_workon_or_create sql requirements.txt
-            PYTHONPATH=. alembic -x dbname="postgresql://navitia:navitia@localhost/navitia" upgrade head
+            PYTHONPATH=. alembic -x dbname="postgresql://localhost/$DB_NAME" upgrade head
         deactivate
     popd
 }
 
-kirin_create_db() {
+
+create_cities_db() {
+    [[ $1 ]] && DB_NAME=$1 || DB_NAME="cities"
+    create_postgres_db $DB_NAME
+
+    pushd $NAVITIA_SRC_PATH/cities
+        virtual_env_workon_or_create sql requirements.txt
+            PYTHONPATH=. alembic -x dbname="postgresql://localhost/$DB_NAME" upgrade head
+        deactivate
+    popd
+}
+
+createi_kirin_db() {
     create_postgres_db kirin
     pushd "$KISIO_SRC/kirin"
         git submodule update --init --recursive
@@ -42,13 +56,13 @@ kirin_create_db() {
     popd
 }
 
-navitia_create_dbs() {
+create_navitia_dbs() {
     jormungandr_create_db
     ed_create_db
     kirin_create_db
 }
 
-navitia_drop_dbs() {
+drop_navitia_dbs() {
     sudo -u postgres dropdb navitia 
     sudo -u postgres dropdb jormungandr 
     sudo -u postgres dropdb kirin
@@ -119,8 +133,8 @@ NAVITIA_PORT=5000
 SYTRAL_RT_PORT=5001
 
 jormun() {
-    KEY=$1;  if [ ! $KEY ]; then KEY="default"; fi
-    SOCKET=$2; if [ !$SOCKET ]; then SOCKET="ipc:///tmp/"$KEY"_kraken"; fi
+    #KEY=$1;  if [ ! $KEY ]; then KEY="default"; fi
+    #SOCKET=$2; if [ !$SOCKET ]; then SOCKET="ipc:///tmp/"$KEY"_kraken"; fi
 
     pushd "$NAVITIA_PATH/source/jormungandr"
         PYTHONPATH=.:../navitiacommon/ 

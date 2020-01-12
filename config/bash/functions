@@ -1,11 +1,11 @@
 #! /bin/bash
 
-ssh-start-agent() {
+function ssh-start-agent() {
     eval `ssh-agent`
     ssh-add
 }
 
-urlencode() {
+function urlencode() {
     # urlencode <string>
     local length="${#1}"
     for (( i = 0; i < length; i++ )); do
@@ -19,39 +19,39 @@ urlencode() {
     printf '\n'
 }
 
-urldecode() {
+function urldecode() {
     # urldecode <string>
     local url_encoded="${1//+/ }"
     printf '%b' "${url_encoded//%/\\x}"
     printf '\n'
 }
 
-timestamp2human() {
+function timestamp2human() {
     for var in "$@"
     do
         echo "$var : "+`date -d @$var -u`
     done
 }
 
-time2human() {
+function time2human() {
     for var in "$@"
     do
         echo "$var : "+`date -d @$var -u +%H:%M:%S`
     done
 }
 
-jmespath_filter() {
+function jmespath_filter() {
     FILTER=$1; if [ ! $FILTER ]; then FILTER="*"; fi
     python -c "import sys;import json;import jmespath; print(json.dumps(jmespath.search('$FILTER', json.loads(sys.stdin.read()))))" | json_pp | highlight -S json -O ansi
 }
 
-json_filter() {
+function json_filter() {
     jmespath_filter $1 | json_highlight
 }
 
 # call this function from prompt then customize your terminal colors how you like in the terminal/preference/settings
 # colors will change so you can see what they look like in the terminal
-display_colors (){
+function display_colors (){
 	echo -e "\033[0mCOLOR_NC\tCOLOR_NO_COLOR"
 	echo -e "\033[0;30mCOLOR_BLACK\t\033[1;30mCOLOR_BRIGHT_BLACK"
 	echo -e "\033[0;31mCOLOR_RED\t\033[1;31mCOLOR_BRIGHT_RED"
@@ -64,19 +64,18 @@ display_colors (){
 }
 
 
-create_postgres_user() {
+function create_postgres_user() {
     NEW_USER=$1
     NEW_PWD=$2
-    sudo -u postgres psql -c "\du" | cut -d\| -f1 | egrep -q $NEW_USER || sudo -u postgres psql -c "CREATE USER $NEW_USER WITH PASSWORD '$NEW_PWD';"
+    psql -c "\du" | cut -d\| -f1 | egrep -q $NEW_USER || psql -c "CREATE USER $NEW_USER WITH PASSWORD '$NEW_PWD';"
 }
 
-create_postgres_db() {
+function create_postgres_db() {
     DB_NAME=$1
-    __create_postgres_user navitia navitia
-    sudo -u postgres psql -l | cut -d\| -f1 | egrep -q $DB_NAME || (sudo -u postgres createdb -O navitia $DB_NAME && sudo -u postgres psql -q -d $DB_NAME -c "CREATE EXTENSION postgis;")
+    psql -l | cut -d\| -f1 | egrep -q $DB_NAME || (createdb -O $USER $DB_NAME && psql -q -d $DB_NAME -c "CREATE EXTENSION postgis;") && echo "$DB_NAME db created."
 }
 
-virtual_env_workon_or_create() {
+function virtual_env_workon_or_create() {
     ENV_NAME=$1
     REQUIREMENTS_FILE=$2
     VENV=$(workon | egrep "^$ENV_NAME$")
