@@ -19,11 +19,25 @@ function urlencode() {
     printf '\n'
 }
 
-function urldecode() {
+function _urldecode() {
     # urldecode <string>
     local url_encoded="${1//+/ }"
     printf '%b' "${url_encoded//%/\\x}"
     printf '\n'
+}
+
+function urldecode() {
+    
+    if [[ "$#" -eq 0 ]]; then
+        while read line; do
+            _urldecode "$line"
+        done
+    else 
+        while (( $# )); do
+            _urldecode $1
+            shift
+        done
+    fi
 }
 
 function timestamp2human() {
