@@ -4,3 +4,5 @@
 .pdbrc.py
 CMakeGraphVizOptions.cmake
 *.bak.py
+compile_commands.json
+.clangd 

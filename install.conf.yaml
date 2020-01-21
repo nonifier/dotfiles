@@ -13,4 +13,17 @@
     ~/.config/nvim: config/nvim
 
 - shell:
-    - echo Yoooooooo
+    - 
+      command: sudo apt install -y 
+         clang-tools-9 clangd-9
+         nodejs npm
+      stderr: true
+      stdout: true
+      description: Install packagages
+    - 
+      description: Configure alternatives
+      command: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 900
+            && sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 900 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-9
+      stdout: true
+      stderr: true
+
