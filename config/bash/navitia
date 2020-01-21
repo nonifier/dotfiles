@@ -214,3 +214,20 @@ sytral_rt(){
     popd
 }
 
+
+navitia_print_rt_base64_protobuf() {
+    pushd "$NAVITIA_SRC_PATH/jormungandr/tests" > /dev/null
+        virtual_env_workon_or_create jormun ../requirements_dev.txt > /dev/null
+            python -c "
+import gtfs_realtime_pb2
+fm = gtfs_realtime_pb2.FeedMessage()
+
+from base64 import b64decode
+fm.ParseFromString(b64decode(u'$1')) 
+
+from google.protobuf import text_format, json_format
+print(json_format.MessageToJson(fm))
+"
+        deactivate
+    popd > /dev/null
+}
