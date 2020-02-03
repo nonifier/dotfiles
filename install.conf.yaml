@@ -16,7 +16,7 @@
     - 
       command: sudo apt install -y 
          clang-tools-9 clangd-9
-         nodejs npm
+         nodejs npm yarn # coc
       stderr: true
       stdout: true
       description: Install packagages
