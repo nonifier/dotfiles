@@ -16,31 +16,42 @@ call plug#end()
 colorscheme molokai
 
 map <Space> <leader>
-map <leader>f :FZF<cr>
-map <leader>b :Buffers <cr>
-map <leader>W :Windows <cr>
+
 map <leader>w :w<cr>
 map <leader>q <C-w><C-q>
-map <leader>h :History <cr>
-map <leader>s :BLine <cr>
-map <leader>S :BLine <C-r>"<cr>
+map <leader>wq <leader>w<cr><C-w><C-q>
+
+map <leader>ff :FZF<cr>
+map <leader>fb :Buffers <cr>
+map <leader>fw :Windows <cr>
+map <leader>fh :History <cr>
+map <leader>sc :History: <cr>
 map <leader>st :BTags <cr>
 map <leader>ST :BTags <C-r>"<cr>
-map <leader>r :Rg! <cr>
-map <leader>R :Rg <C-r>+<cr>
+
+" Display All vim commands
+map <leader>fc :command
+
+map <leader>t :Tags <cr>
+map <leader>T :Tags <C-r>"<cr>
+
+map <leader>/ :BLine <C-r>"<cr>
+
+map <leader>rg :Rg! <cr>
+map <leader>RG :Rg <C-r>+<cr>
+
+" Yank in special copy system register
 map <leader>yr yiw<leader>R 
 map <leader>y "+y
 map <leader>Y "*y
-map <leader>t :Tags <cr>
-map <leader>T :Tags <C-r>"<cr>
-map <leader>c :History: <cr>
+
 map <leader>ct :! ctags -R . <cr><cr>
 
 set undofile
 let g:airline#extensions#branch#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme='powerlineish'
-
+    
 set tabstop=4
 set shiftwidth=4
 set expandtab
@@ -143,7 +154,7 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 " Remap for do codeAction of current line
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
+nmap <leader>cfc  <Plug>(coc-fix-current)
 
 " Create mappings for function text object, requires document symbols feature of languageserver.
 xmap if <Plug>(coc-funcobj-i)
@@ -167,23 +178,23 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-" Using CocList
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-"
+"" Using CocList
+"" Show all diagnostics
+"nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+"" Manage extensions
+"nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+"" Show commands
+"nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+"" Find symbol of current document
+"nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+"" Search workspace symbols
+"nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+"" Do default action for next item.
+"nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+"" Do default action for previous item.
+"nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+"" Resume latest coc list
+"nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+""
 " ' --------------------------------------------------------
 
