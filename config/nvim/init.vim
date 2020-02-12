@@ -23,7 +23,7 @@ map <leader>wq <leader>w<cr><C-w><C-q>
 
 map <leader>ff :FZF<cr>
 map <leader>fb :Buffers <cr>
-map <leader>fw :Windows <cr>
+"map <leader>fw :Windows <cr>
 map <leader>fh :History <cr>
 map <leader>sc :History: <cr>
 map <leader>st :BTags <cr>
@@ -157,10 +157,10 @@ nmap <leader>ac  <Plug>(coc-codeaction)
 nmap <leader>cfc  <Plug>(coc-fix-current)
 
 " Create mappings for function text object, requires document symbols feature of languageserver.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
+" xmap if <Plug>(coc-funcobj-i)
+" xmap af <Plug>(coc-funcobj-a)
+" omap if <Plug>(coc-funcobj-i)
+" omap af <Plug>(coc-funcobj-a)
 
 " Use <TAB> for select selections ranges, needs server support, like: coc-tsserver, coc-python
 nmap <silent> <TAB> <Plug>(coc-range-select)
