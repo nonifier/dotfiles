@@ -12,12 +12,11 @@
     ~/.config/bash: config/bash
     ~/.config/nvim: config/nvim
     ~/.pdbrc.py: config/pdbrc.py
+    ~/.gdbinit: config/gdbinit
 
 - shell:
     - 
-      command: sudo apt install -y 
-         clang-tools-9 clangd-9
-         nodejs npm yarn # coc
+      command: sudo apt install -y clang-tools-9 clangd-9 libssl-dev
       stderr: true
       stdout: true
       description: Install packagages
@@ -27,4 +26,3 @@
             && sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 900 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-9
       stdout: true
       stderr: true
-
