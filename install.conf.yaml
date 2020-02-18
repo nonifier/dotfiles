@@ -11,6 +11,7 @@
     ~/.bashrc: config/bash/bashrc
     ~/.config/bash: config/bash
     ~/.config/nvim: config/nvim
+    ~/.pdbrc.py: config/pdbrc.py
 
 - shell:
     - 
