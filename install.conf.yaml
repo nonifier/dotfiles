@@ -9,6 +9,7 @@
     ~/.gitignore: config/git/gitignore
     ~/.gitconfig: config/git/gitconfig
     ~/.bashrc: config/bash/bashrc
+    ~/.zshrc: config/zsh/zshrc
     ~/.config/bash: config/bash
     ~/.config/nvim: config/nvim
     ~/.pdbrc.py: config/pdbrc.py
