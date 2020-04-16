@@ -19,18 +19,17 @@ map <Space> <leader>
 
 map <leader>w :w<cr>
 map <leader>q <C-w><C-q>
-map <leader>wq <leader>w<cr><C-w><C-q>
 
 map <leader>ff :FZF<cr>
 map <leader>fb :Buffers <cr>
 "map <leader>fw :Windows <cr>
 map <leader>fh :History <cr>
-map <leader>sc :History: <cr>
+map <leader>fc :History: <cr>
 map <leader>st :BTags <cr>
 map <leader>ST :BTags <C-r>"<cr>
 
 " Display All vim commands
-map <leader>fc :command
+map <leader>c :command
 
 map <leader>t :Tags <cr>
 map <leader>T :Tags <C-r>"<cr>
@@ -45,7 +44,9 @@ map <leader>yr yiw<leader>R
 map <leader>y "+y
 map <leader>Y "*y
 
-map <leader>ct :! ctags -R . <cr><cr>
+"map <leader>ct :! ctags -R . <cr><cr>
+command! -nargs=0 Ctags :! ctags -R . <cr>
+map <leader>c :Commands<cr>
 
 set undofile
 let g:airline#extensions#branch#enabled = 1

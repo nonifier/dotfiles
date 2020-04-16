@@ -20,11 +20,12 @@ export COLOR_BRIGHT_CYAN='\[\033[1;36m\]'
 export COLOR_WHITE='\[\033[0;37m\]'
 export COLOR_BRIGHT_WHITE='\[\033[1;37m\]'
 
+export GOPATH=/home/ogeorget/go
+
 export PATH=:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 PATH+=:/home/ogeorget/.local/bin
 PATH+=:/usr/local/go/bin
 PATH+=:/home/ogeorget/dev/github/fzf/bin
 PATH+=:/home/ogeorget/.cargo/bin
-
-export GOPATH=/home/ogeorget/go
+PATH+=:$GOPATH/bin
 
