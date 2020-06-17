@@ -27,9 +27,6 @@ map <leader>fc :History: <cr>
 map <leader>st :BTags <cr>
 map <leader>ST :BTags <C-r>"<cr>
 
-" Display All vim commands
-map <leader>c :command
-
 map <leader>t :Tags <cr>
 map <leader>T :Tags <C-r>"<cr>
 
@@ -154,7 +151,7 @@ nmap <leader>a  <Plug>(coc-codeaction-selected)
 " Remap for do codeAction of current line
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
-nmap <leader>cfc  <Plug>(coc-fix-current)
+nmap <leader>afc  <Plug>(coc-fix-current)
 
 " Create mappings for function text object, requires document symbols feature of languageserver.
 " xmap if <Plug>(coc-funcobj-i)
