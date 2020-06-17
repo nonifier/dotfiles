@@ -7,9 +7,12 @@
 
 - link: 
     ~/.bashrc: config/bash/bashrc
-    ~/.config/bash: config/bash
-    ~/.config/nvim: config/nvim
     ~/.config/alacritty: config/alacritty
+    ~/.config/bash: config/bash
+    ~/.config/i3: config/i3
+    ~/.config/nvim: config/nvim
+    ~/.config/polybar: config/polybar
+    ~/.config/rofi: config/rofi
     ~/.gdbinit: config/gdbinit
     ~/.gitconfig: config/git/gitconfig
     ~/.gitignore: config/git/gitignore
@@ -26,6 +29,6 @@
       description: == Configure alternatives
     -
       command: 
-            sudo apt install -y i3 feh xbacklight alacritty
+            sudo apt install -y i3 feh xbacklight alacritty compton rofi
             && pip3 install pywal
       description: == Colour manager (ie. https://github.com/dylanaraps/pywal/wiki/Installation#table-of-contents)
