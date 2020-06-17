@@ -1,6 +1,6 @@
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'tpope/vim-sensible'  
-Plug 'tomasr/molokai'
+Plug 'dylanaraps/wal.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-fugitive'
@@ -10,10 +10,9 @@ Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree'
 Plug 'wincent/terminus'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
 call plug#end()
 
-colorscheme molokai
+colorscheme wal
 
 map <Space> <leader>
 
@@ -51,8 +50,8 @@ map <leader>c :Commands<cr>
 set undofile
 let g:airline#extensions#branch#enabled = 1
 let g:airline_powerline_fonts = 1
-let g:airline_theme='powerlineish'
-    
+" let g:airline_theme='powerlineish'
+ 
 set tabstop=4
 set shiftwidth=4
 set expandtab
@@ -62,7 +61,7 @@ set mouse=a
 set autoread
 set clipboard=unnamed
 set noswapfile
-
+hi CursorLine cterm=bold ctermfg=None ctermbg=None guibg=None
 au FocusGained,BufEnter,CursorMoved,CursorHold * checktime
 
 " ----------------------------------------------------------

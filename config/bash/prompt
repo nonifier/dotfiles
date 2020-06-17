@@ -46,4 +46,6 @@ else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 
-
+wal --theme monokai --vte
+#cat ~/.cache/wal/sequences
+#source ~/.cache/wal/colors-tty.sh
