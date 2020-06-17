@@ -6,14 +6,15 @@
 - clean: []
 
 - link: 
-    ~/.gitignore: config/git/gitignore
-    ~/.gitconfig: config/git/gitconfig
     ~/.bashrc: config/bash/bashrc
-    ~/.zshrc: config/zsh/zshrc
     ~/.config/bash: config/bash
     ~/.config/nvim: config/nvim
-    ~/.pdbrc.py: config/pdbrc.py
+    ~/.config/alacritty: config/alacritty
     ~/.gdbinit: config/gdbinit
+    ~/.gitconfig: config/git/gitconfig
+    ~/.gitignore: config/git/gitignore
+    ~/.pdbrc.py: config/pdbrc.py
+    ~/.zshrc: config/zsh/zshrc
 
 - shell:
     - 
@@ -25,6 +26,6 @@
       description: == Configure alternatives
     -
       command: 
-            sudo apt install -y i3 feh xbacklight 
+            sudo apt install -y i3 feh xbacklight alacritty
             && pip3 install pywal
       description: == Colour manager (ie. https://github.com/dylanaraps/pywal/wiki/Installation#table-of-contents)
