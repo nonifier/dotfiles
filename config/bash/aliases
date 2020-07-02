@@ -37,3 +37,5 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # highlight Json text
 alias json_highlight='json_pp | highlight -S json -O ansi'
 
+# Xclips by default to clipboard
+alias xclip='xclip -selection c' 

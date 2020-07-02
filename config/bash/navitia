@@ -145,7 +145,7 @@ jormun() {
     popd
 }
 
-kraken_realtime() {
+kraken-realtime() {
     export KRAKEN_GENERAL_is_realtime_enabled=True
     export KRAKEN_GENERAL_is_realtime_add_enabled=True
     export KRAKEN_GENERAL_kirin_timeout=1800
@@ -159,8 +159,8 @@ kraken_realtime() {
     kraken $*
 }
 
-kraken() {
-    KEY="default"; if [ $1 ]; then KEY=$1; fi
+run-kraken() {
+    KEY=`basename $(pwd)`; if [ $1 ]; then KEY=$1; fi
     DB="data.nav.lz4"; if [ $2 ]; then DB=$2; fi
 
     export KRAKEN_GENERAL_instance_name=$KEY
@@ -170,7 +170,7 @@ kraken() {
     $KRAKEN_BUILD_DIR/kraken/kraken
 }
 
-kraken_chaos() {
+kraken-chaos() {
     PWD=$1 
     USER=$2
     DBNAME=$3
