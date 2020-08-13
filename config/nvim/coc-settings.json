@@ -2,7 +2,7 @@
   "languageserver": {
     "clangd": {
       "command": "clangd",
-      "args": ["--background-index", "--pch-storage=disk"],
+      "args": ["--background-index", "--pch-storage=disk", "-j=6"],
       "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
       "filetypes": ["c", "cpp", "objc", "objcpp"]
     }
