@@ -167,6 +167,9 @@ run-kraken() {
     export KRAKEN_GENERAL_zmq_socket="ipc:///tmp/"$KEY"_kraken"
     export KRAKEN_GENERAL_database=$DB
 
+    echo "KRAKEN_GENERAL_instance_name : $KRAKEN_GENERAL_instance_name"
+    echo "KRAKEN_GENERAL_zmq_socket: $KRAKEN_GENERAL_zmq_socket"
+    echo "KRAKEN_GENERAL_database: $KRAKEN_GENERAL_database"
     $KRAKEN_BUILD_DIR/kraken/kraken
 }
 
