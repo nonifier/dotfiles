@@ -21,7 +21,7 @@
 
 - shell:
     - 
-      command: sudo apt install -y clang-tools-9 clangd-9 libssl-dev
+      command: sudo apt install -y clang-tools-9 clangd-9 libssl-dev pass empty-expect
       description: == Install packagages
     - 
       command: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 900
@@ -32,3 +32,6 @@
             sudo apt install -y i3 feh xbacklight alacritty compton rofi
             && pip3 install pywal
       description: == Colour manager (ie. https://github.com/dylanaraps/pywal/wiki/Installation#table-of-contents)
+    - 
+      command: if [[ ! -d ~/.password-store/ ]]; then git clone git@github.com:nonifier/password-store.git ~/.password-store/; fi
+      description: == Install password-store database

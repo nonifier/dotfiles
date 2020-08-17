@@ -2,7 +2,8 @@
 
 function ssh-start-agent() {
     eval `ssh-agent`
-    ssh-add
+    empty -f ssh-add
+    pass show ssh/id_rsa | head -n1 | empty -s 
 }
 
 function urlencode() {
