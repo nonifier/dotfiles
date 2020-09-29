@@ -63,6 +63,7 @@ fi
 [ -f ~/.config/bash/completion ] && source ~/.config/bash/completion
 [ -f ~/.config/bash/navitia ] && source ~/.config/bash/navitia
 [ -f ~/.config/bash/prompt ] && source ~/.config/bash/prompt
+[ -f ~/dev/kisio/source/navitia-configurator/bash-tools/tyr.sh ] && source ~/dev/kisio/source/navitia-configurator/bash-tools/tyr.sh 
 
 # added by travis gem
 [ -f /home/ogeorget/.travis/travis.sh ] && source /home/ogeorget/.travis/travis.sh

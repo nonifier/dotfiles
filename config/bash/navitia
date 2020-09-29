@@ -235,46 +235,36 @@ print(json_format.MessageToJson(fm))
     popd > /dev/null
 }
 
-_tyr_completion() {
-    local CUR=${COMP_WORDS[COMP_CWORD]}
-    case $COMP_CWORD in
-        1)
-            COMPREPLY+=(`compgen -W "alpha bench custo dev internal pre prod sim" $CUR`) ;;
-        2) 
-            local ENV_IDX=$(($COMP_CWORD-1))
-            local ENV=${COMP_WORDS[$ENV_IDX]}
-            local TYR_HOST=`_tyr_resolve_host $ENV`
-            local COVERAGES=`http $TYR_HOST/v1/instances | jq --sort-keys -r '[.instances[].name] | @tsv' `
-            COMPREPLY+=(`compgen -W "$COVERAGES" $CUR`)
-            ;;
-    esac
-}
-_tyr_resolve_host() {
-    local TYR_HOST=""
-    case $1 in 
-        al*) TYR_HOST='tyr-ws.ctp.alpha.canaltp.fr';;
-        ben*) TYR_HOST='tyr-ws.ctp.bench.canaltp.fr';;
-        cus*) TYR_HOST='tyr-ws.ctp.customer.canaltp.fr';;
-        dev*) TYR_HOST='tyr.dev.canaltp.fr';;
-        int*) TYR_HOST='tyr-ws.ctp.internal.canaltp.fr';;
-        pre*) TYR_HOST='vippriv-tyrpre-ws.mutu.prod.canaltp.prod';;
-        pro*) TYR_HOST='vippriv-tyr-ws.mutu.prod.canaltp.prod';;
-        sim*) TYR_HOST='vippriv-tyrsim-ws.mutu.prod.canaltp.prod';;
-        *) echo Error - no environment found for \"$1\" >&2; return 1
-    esac
-    echo $TYR_HOST
-}
-
-tyr () {
-    if [[ $# -lt 2 ]]; then
-        echo "Usage :    tyr <environment> <coverage>"
-        return 1
-    fi
-
-    local TYR_HOST=`_tyr_resolve_host $1`
-    TYR_PATH=$TYR_HOST/"v1/instances"
-    echo $TYR_PATH
-    echo "-----------"
-    http $TYR_PATH | jq --sort-keys '.instances[] | select( .name | contains("'$2'")) | { (.name) : . }'
-}
-complete -F _tyr_completion tyr
+#_tyr_completion() {
+#    local CUR=${COMP_WORDS[COMP_CWORD]}
+#    case $COMP_CWORD in
+#        1)
+#            local ENVIRONMENTS=$(grep --color=never -Elr 'Tyr\(".*"\)' *.py)
+#            COMPREPLY+=("`echo "$ENVIRONMENTS" | fzf --reverse -1 --query=$CUR`")
+#            ;;
+#        *) 
+#            local ENV=${COMP_WORDS[1]}
+#            local TYR_HOST=`_tyr_resolve_host $ENV`
+#            local COVERAGES=`curl -s "$TYR_HOST/v1/instances" | jq -r '.instances[].name' | sort`
+#            COMPREPLY+=("`echo "$COVERAGES" | fzf --multi --reverse -1 --height=40% --query=$CUR | tr '\n' ' '`")
+#            ;;
+#    esac
+#}
+#_tyr_resolve_host() {
+#    # $1 is an environment filename (ie. dev.py, prod.py) 
+#    echo $(grep -E 'Tyr\(.*\)' $1 | cut -d\" -f2)
+#}
+#
+#tyr () {
+#    if [[ $# -lt 2 ]]; then
+#        echo "Usage :    tyr <environment> <coverage>"
+#        return 1
+#    fi
+#
+#    local TYR_HOST=`_tyr_resolve_host $1`
+#    TYR_PATH=$TYR_HOST/"v1/instances"
+#    echo $TYR_PATH
+#    echo "-----------"
+#    curl -s "$TYR_PATH" | jq --sort-keys '.instances[] | select( .name | contains("'$2'")) | { (.name) : . }'
+#}
+#complete -F _tyr_completion tyr
