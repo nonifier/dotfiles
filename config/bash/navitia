@@ -103,11 +103,13 @@ generate_nav_from_bdd() {
     if [[ $4 ]]; then CITIES_USER=$4; fi
     if [[ $5 ]]; then CITIES_PWD=$5; fi
 
-    CONNECTION_STR="psql://$COVERAGE:$PASSWD@$HOST/$COVERAGE"
-    CITIES_STR="psql://$CITIES_USER:$CITIES_PWD@$HOST/cities"
+    CONNECTION_STR="postgresql://$COVERAGE:$PASSWD@$HOST/$COVERAGE"
+    CITIES_STR="postgresql://$CITIES_USER:$CITIES_PWD@$HOST/cities"
     echo "connection string : $CONNECTION_STR"
     echo "cities string : $CITIES_STR"
-    $KRAKEN_BUILD_DIR/ed/ed2nav -o "./data.nav.lz4" --connection-string "$CONNECTION_STR" --cities-connection-string "$CITIES_STR"
+    local ED_CMD="$KRAKEN_BUILD_DIR/ed/ed2nav -o "./data.nav.lz4" --connection-string $CONNECTION_STR --cities-connection-string $CITIES_STR"
+    echo $ED_CMD
+    eval $ED_CMD
 }
 
 make_test_navitia() {
