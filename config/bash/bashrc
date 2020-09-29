@@ -42,6 +42,9 @@ then export EDITOR=`which nvim`;
 else sudo apt install neovim; 
 fi
 
+# Add default ssh-key to ssh agent
+empty -f ssh-add
+pass show ssh/id_rsa | head -n1 | empty -s 
 
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
