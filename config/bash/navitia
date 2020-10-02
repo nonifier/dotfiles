@@ -6,7 +6,7 @@ NAVITIA_SRC_PATH="$NAVITIA_PATH/source"
 TYR_PATH=$NAVITIA_SRC_PATH/tyr
 
 export PYTHONPATH="$NAVITIA_SRC_PATH/navitiacommon"
-export KRAKEN_BUILD_DIR="/home/ogeorget/dev/kisio/build/navitia/release/"
+_NAVITIA_BUILD_DIR_="/home/ogeorget/dev/kisio/build/navitia/release/"
 
 jormungandr_create_db() {
     create_postgres_db jormungandr
@@ -69,7 +69,7 @@ drop_navitia_dbs() {
 }
 
 generate_nav_from() {
-    ED_BUILD_PATH="$KRAKEN_BUILD_DIR/ed/"
+    ED_BUILD_PATH="$_NAVITIA_BUILD_DIR_/ed/"
     COVERAGE_PATH=$(realpath .)
 
     if [[ $1 ]]; then NAVITIA_PATH=$(realpath $1); fi
@@ -90,25 +90,32 @@ generate_nav_from() {
 }
 
 generate_nav_from_bdd() {
-    COVERAGE=$1
-    PASSWD=$2
+    local COVERAGE=$1
+    local PASSWD=$2
+    local HOST=$3
+    local CITIES_USER=$4
+    local CITIES_PWD=$5 
 
     if [[ $# -lt 2 ]]; then
         echo "usage:"
-        echo "      generate_nav_from_bdd <COVERAGE> <PWD> [HOST] [CITIES_USER] [CITIES_PWD]"
+        echo "      generate_nav_from_bdd <COVERAGE> <PWD> <HOST> <CITIES_USER> <CITIES_PWD>"
+        echo ""
+        echo "Environment Variables :"
+        echo "    NAVITIA_BUILD_DIR : path to Kraken Binary"
         echo ''
         return 0
     fi
-    if [[ $3 ]]; then HOST=$3; fi
-    if [[ $4 ]]; then CITIES_USER=$4; fi
-    if [[ $5 ]]; then CITIES_PWD=$5; fi
+    if [[ ! $NAVITIA_BUILD_DIR ]]; then 
+        NAVITIA_BUILD_DIR=$_NAVITIA_BUILD_DIR_; 
+    fi
 
     CONNECTION_STR="postgresql://$COVERAGE:$PASSWD@$HOST/$COVERAGE"
     CITIES_STR="postgresql://$CITIES_USER:$CITIES_PWD@$HOST/cities"
-    echo "connection string : $CONNECTION_STR"
-    echo "cities string : $CITIES_STR"
-    local ED_CMD="$KRAKEN_BUILD_DIR/ed/ed2nav -o "./data.nav.lz4" --connection-string $CONNECTION_STR --cities-connection-string $CITIES_STR"
-    echo $ED_CMD
+    echo "- connection string : $CONNECTION_STR"
+    echo "- cities string : $CITIES_STR"
+    echo "- Kraken build dir : $NAVITIA_BUILD_DIR"; 
+    local ED_CMD="$NAVITIA_BUILD_DIR/ed/ed2nav -o "./data.nav.lz4" --connection-string $CONNECTION_STR --cities-connection-string $CITIES_STR"
+    echo "- $ED_CMD"
     eval $ED_CMD
 }
 
@@ -172,7 +179,7 @@ run-kraken() {
     echo "KRAKEN_GENERAL_instance_name : $KRAKEN_GENERAL_instance_name"
     echo "KRAKEN_GENERAL_zmq_socket: $KRAKEN_GENERAL_zmq_socket"
     echo "KRAKEN_GENERAL_database: $KRAKEN_GENERAL_database"
-    $KRAKEN_BUILD_DIR/kraken/kraken
+    $_NAVITIA_BUILD_DIR_/kraken/kraken
 }
 
 kraken-chaos() {
