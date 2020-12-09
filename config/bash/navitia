@@ -8,14 +8,17 @@ TYR_PATH=$NAVITIA_SRC_PATH/tyr
 export PYTHONPATH="$NAVITIA_SRC_PATH/navitiacommon"
 _NAVITIA_BUILD_DIR_="/home/ogeorget/dev/kisio/build/navitia/release/"
 
-jormungandr_create_db() {
-    create_postgres_db jormungandr
-
+jormungandr_update_db() {
     pushd $TYR_PATH
         virtual_env_workon_or_create tyr requirements_dev.txt
             PYTHONPATH=$PYTHONPATH:$TYR_PATH ./manage_tyr.py db upgrade
         deactivate
     popd
+}
+
+jormungandr_create_db() {
+    create_postgres_db jormungandr
+    jormungandr_update_db 
 }
 
 create_ed_db() {
@@ -144,6 +147,8 @@ SYTRAL_RT_PORT=5001
 jormun() {
     #KEY=$1;  if [ ! $KEY ]; then KEY="default"; fi
     #SOCKET=$2; if [ !$SOCKET ]; then SOCKET="ipc:///tmp/"$KEY"_kraken"; fi
+
+    jormungandr_update_db
 
     pushd "$NAVITIA_PATH/source/jormungandr"
         PYTHONPATH=.:../navitiacommon/ 
