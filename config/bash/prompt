@@ -48,4 +48,4 @@ fi
 
 wal --theme monokai --vte
 #cat ~/.cache/wal/sequences
-#source ~/.cache/wal/colors-tty.sh
+source ~/.cache/wal/colors.sh
