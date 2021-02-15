@@ -29,3 +29,5 @@ PATH+=:/home/ogeorget/dev/github/fzf/bin
 PATH+=:/home/ogeorget/.cargo/bin
 PATH+=:$GOPATH/bin
 
+
+export PASSWORD_STORE_GENERATED_LENGTH=64 
