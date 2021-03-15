@@ -46,33 +46,40 @@ fi
 empty -f ssh-add
 pass show ssh/id_rsa | head -n1 | empty -s 
 
+
+function __load_file_if_exists() {
+    if [[ -f "$1" ]]; then
+        source "$1"
+    fi
+}
+
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-[ -f ~/.bash_aliases ] && source ~/.bash_aliases
+__load_file_if_exists ~/.bash_aliases
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
-fi
+__load_file_if_exists /etc/bash_completion
 
 # Custom bash configuration
-[ -f ~/.config/bash/exports ] && source ~/.config/bash/exports
-[ -f ~/.config/bash/aliases ] && source ~/.config/bash/aliases
-[ -f ~/.config/bash/functions ] && source ~/.config/bash/functions
-[ -f ~/.config/bash/completion ] && source ~/.config/bash/completion
-[ -f ~/.config/bash/navitia ] && source ~/.config/bash/navitia
-[ -f ~/.config/bash/prompt ] && source ~/.config/bash/prompt
-[ -f ~/dev/kisio/source/navitia-configurator/bash-tools/tyr.sh ] && source ~/dev/kisio/source/navitia-configurator/bash-tools/tyr.sh 
+__load_file_if_exists ~/.config/bash/exports
+__load_file_if_exists ~/.config/bash/aliases
+__load_file_if_exists ~/.config/bash/functions
+__load_file_if_exists ~/.config/bash/completion
+__load_file_if_exists ~/.config/bash/navitia
+__load_file_if_exists ~/.config/bash/prompt
+__load_file_if_exists ~/dev/kisio/source/navitia-configurator/bash-tools/tyr.sh 
 
 # added by travis gem
-[ -f /home/ogeorget/.travis/travis.sh ] && source /home/ogeorget/.travis/travis.sh
+__load_file_if_exists ~/.travis/travis.sh
 
 # FZF !
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+__load_file_if_exists ~/.fzf.bash
+
+# Ruby RVM
+__load_file_if_exists ~/.rvm/scripts/rvm
 
 ##################################################################
 #
@@ -92,3 +99,6 @@ else
 fi
 
 
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
