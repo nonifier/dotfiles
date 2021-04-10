@@ -14,25 +14,25 @@
     ~/.config/nvim: config/nvim
     ~/.config/polybar: config/polybar
     ~/.config/rofi: config/rofi
+    ~/.config/wallpapers: config/wallpapers
     ~/.gdbinit: config/gdbinit
     ~/.gitconfig: config/git/gitconfig
     ~/.gitignore: config/git/gitignore
     ~/.pdbrc.py: config/pdbrc.py
-    ~/.zshrc: config/zsh/zshrc
 
 - shell:
-    - 
-      command: sudo apt install -y clang-tools-9 clangd-9 libssl-dev pass empty-expect
+    - command: sudo apt install -y clang-tools-9 clangd-9 libssl-dev pass empty-expect neovim git ssh httpie
       description: == Install packagages
-    - 
-      command: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 900
+    - command: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 900
             && sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 900 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-9
       description: == Configure alternatives
-    -
-      command: 
-            sudo apt install -y i3 feh xbacklight alacritty compton rofi
+    - command:
+        sudo apt install -y polybar fzf
+      description: "Ubuntu > 19 install"
+    - command: 
+            sudo apt install -y i3 feh alacritty compton rofi
             && pip3 install pywal
       description: == Colour manager (ie. https://github.com/dylanaraps/pywal/wiki/Installation#table-of-contents)
-    - 
-      command: if [[ ! -d ~/.password-store/ ]]; then git clone git@github.com:nonifier/password-store.git ~/.password-store/; fi
+    - command: 
+          "[ -d ~/.password-store/ ] || git clone git@github.com:nonifier/password-store.git ~/.password-store/"
       description: == Install password-store database

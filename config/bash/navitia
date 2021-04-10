@@ -249,36 +249,4 @@ print(json_format.MessageToJson(fm))
     popd > /dev/null
 }
 
-#_tyr_completion() {
-#    local CUR=${COMP_WORDS[COMP_CWORD]}
-#    case $COMP_CWORD in
-#        1)
-#            local ENVIRONMENTS=$(grep --color=never -Elr 'Tyr\(".*"\)' *.py)
-#            COMPREPLY+=("`echo "$ENVIRONMENTS" | fzf --reverse -1 --query=$CUR`")
-#            ;;
-#        *) 
-#            local ENV=${COMP_WORDS[1]}
-#            local TYR_HOST=`_tyr_resolve_host $ENV`
-#            local COVERAGES=`curl -s "$TYR_HOST/v1/instances" | jq -r '.instances[].name' | sort`
-#            COMPREPLY+=("`echo "$COVERAGES" | fzf --multi --reverse -1 --height=40% --query=$CUR | tr '\n' ' '`")
-#            ;;
-#    esac
-#}
-#_tyr_resolve_host() {
-#    # $1 is an environment filename (ie. dev.py, prod.py) 
-#    echo $(grep -E 'Tyr\(.*\)' $1 | cut -d\" -f2)
-#}
-#
-#tyr () {
-#    if [[ $# -lt 2 ]]; then
-#        echo "Usage :    tyr <environment> <coverage>"
-#        return 1
-#    fi
-#
-#    local TYR_HOST=`_tyr_resolve_host $1`
-#    TYR_PATH=$TYR_HOST/"v1/instances"
-#    echo $TYR_PATH
-#    echo "-----------"
-#    curl -s "$TYR_PATH" | jq --sort-keys '.instances[] | select( .name | contains("'$2'")) | { (.name) : . }'
-#}
-#complete -F _tyr_completion tyr
+__load_file_if_exists ~/dev/kisio/source/navitia-configurator/bash-tools/tyr.sh # Navitia

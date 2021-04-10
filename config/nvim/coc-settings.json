@@ -2,10 +2,11 @@
   "languageserver": {
     "clangd": {
       "command": "clangd",
-      "args": ["--background-index", "--pch-storage=disk", "-j=4"],
+      "args": ["--background-index", "--pch-storage=disk", "-j=2"],
       "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
       "filetypes": ["c", "cpp", "objc", "objcpp"]
     }
   },
   "python.jediEnabled": false,
+  "coc.preferences.extensionUpdateCheck": "daily"
 }

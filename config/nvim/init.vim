@@ -10,6 +10,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdtree'
 Plug 'wincent/terminus'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'vim-ruby/vim-ruby'
 call plug#end()
 
 colorscheme wal

@@ -4,29 +4,20 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-#----------------------
-# Aggregate history
-#----------------------
+# See bash(1) for more options
 
-# When the shell exits, append to the history file instead of overwriting it
-shopt -s histappend
-
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=5000
+HISTSIZE=5000 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTFILESIZE=8000
-HISTCONTROL=ignoreboth:erasedups # See bash(1) for more options
+HISTCONTROL=ignoreboth:erasedups 
+PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r" # After each command, append to the history file and reread it
+EDITOR=`which nvim`
 
-# After each command, append to the history file and reread it
-PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
-
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
-
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
-
+shopt -s autocd # a directory is executed as if it were the argument to the cd command.
+shopt -s checkwinsize # check and update the values of LINES and COLUMNS.
+shopt -s globstar # If set, the pattern "**" used in a pathname expansion context will match all files and zero or more directories and subdirectories.
+shopt -s histappend # When the shell exits, append to the history file instead of overwriting it
+shopt -s cmdhist # If set, bash attempts to save all lines of a multiple-line command in the same history  entry.  This allows easy re-editing of multi-line commands.
+ 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
@@ -36,16 +27,9 @@ if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
 fi
 
 
-# Define Nvim as the default EDITOR !
-if [[ -x `which nvim` ]]; 
-then export EDITOR=`which nvim`; 
-else sudo apt install neovim; 
-fi
-
 # Add default ssh-key to ssh agent
 empty -f ssh-add
 pass show ssh/id_rsa | head -n1 | empty -s 
-
 
 function __load_file_if_exists() {
     if [[ -f "$1" ]]; then
@@ -53,52 +37,13 @@ function __load_file_if_exists() {
     fi
 }
 
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-__load_file_if_exists ~/.bash_aliases
-
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-__load_file_if_exists /etc/bash_completion
-
-# Custom bash configuration
-__load_file_if_exists ~/.config/bash/exports
-__load_file_if_exists ~/.config/bash/aliases
-__load_file_if_exists ~/.config/bash/functions
-__load_file_if_exists ~/.config/bash/completion
-__load_file_if_exists ~/.config/bash/navitia
-__load_file_if_exists ~/.config/bash/prompt
-__load_file_if_exists ~/dev/kisio/source/navitia-configurator/bash-tools/tyr.sh 
-
-# added by travis gem
-__load_file_if_exists ~/.travis/travis.sh
-
-# FZF !
-__load_file_if_exists ~/.fzf.bash
-
-# Ruby RVM
-__load_file_if_exists ~/.rvm/scripts/rvm
-
-##################################################################
-#
-#   VirtualEnvWrapper
-#
-__virtualEnvWrapper() {
-    export WORKON_HOME=$HOME/.virtualenvs
-    export PROJECT_HOME=$HOME/Devel
-    source $HOME/.local/bin/virtualenvwrapper.sh
+# Load all files under the .config/bash/ directory 
+function __load_bash_files_from_dir() {
+    for f in $1; do 
+        [[ ${f##*/} != "bashrc" ]] && source $f 
+    done
 }
 
-if [ -f $HOME/.local/bin/virtualenvwrapper.sh ];then
-    __virtualEnvWrapper
-else
-    pip install --user virtualenvwrapper
-    __virtualEnvWrapper
-fi
+# Custom bash configuration
+__load_bash_files_from_dir "$HOME/.config/bash/*" 
 
-
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
