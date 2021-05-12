@@ -47,3 +47,5 @@ function __load_bash_files_from_dir() {
 # Custom bash configuration
 __load_bash_files_from_dir "$HOME/.config/bash/*" 
 
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

@@ -32,6 +32,7 @@ esac
 
 unset color_prompt force_color_prompt
 
+[[ -x `which powerline-shell` ]] || ( pip3 install powerline-shell && sudo apt install fonts-powerline )
 function _update_ps1() {
     if command -v powerline-shell 1>/dev/null; then
         PS1=$(powerline-shell $?)
@@ -46,6 +47,8 @@ else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 
-wal --theme monokai --vte
+[[ -x `which wal` ]] || pip3 install pywal
+wal --theme monokai --vte 
+
 #cat ~/.cache/wal/sequences
 source ~/.cache/wal/colors.sh

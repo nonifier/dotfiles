@@ -7,3 +7,5 @@ CMakeGraphVizOptions.cmake
 compile_commands.json
 .clangd 
 .vim
+./dev/imx8/imx-yocto-bsp/fsl-imx-xwayland-build-dir/tmp/*
+./dev/imx8/imx-yocto-bsp/bld-xwayland/tmp/*

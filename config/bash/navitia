@@ -1,252 +1,252 @@
 #! /bin/bash
 
-KISIO_SRC="/home/ogeorget/dev/kisio/source"
-NAVITIA_PATH="/home/ogeorget/dev/kisio/source/navitia"
-NAVITIA_SRC_PATH="$NAVITIA_PATH/source"
-TYR_PATH=$NAVITIA_SRC_PATH/tyr
-
-export PYTHONPATH="$NAVITIA_SRC_PATH/navitiacommon"
-_NAVITIA_BUILD_DIR_="/home/ogeorget/dev/kisio/build/navitia/release/"
-
-jormungandr_update_db() {
-    pushd $TYR_PATH
-        virtual_env_workon_or_create tyr requirements_dev.txt
-            PYTHONPATH=$PYTHONPATH:$TYR_PATH ./manage_tyr.py db upgrade
-        deactivate
-    popd
-}
-
-jormungandr_create_db() {
-    create_postgres_db jormungandr
-    jormungandr_update_db 
-}
-
-create_ed_db() {
-    [[ $1 ]] && DB_NAME=$1 || DB_NAME="navitia"
-
-    create_postgres_db $DB_NAME
-
-    ALEMBIC_DIR="$NAVITIA_SRC_PATH/sql"
-    pushd $ALEMBIC_DIR
-        virtual_env_workon_or_create sql requirements.txt
-            PYTHONPATH=. alembic -x dbname="postgresql://localhost/$DB_NAME" upgrade head
-        deactivate
-    popd
-}
-
-
-create_cities_db() {
-    [[ $1 ]] && DB_NAME=$1 || DB_NAME="cities"
-    create_postgres_db $DB_NAME
-
-    pushd $NAVITIA_SRC_PATH/cities
-        virtual_env_workon_or_create sql requirements.txt
-            PYTHONPATH=. alembic -x dbname="postgresql://localhost/$DB_NAME" upgrade head
-        deactivate
-    popd
-}
-
-createi_kirin_db() {
-    create_postgres_db kirin
-    pushd "$KISIO_SRC/kirin"
-        git submodule update --init --recursive
-
-        virtual_env_workon_or_create kirin requirements_dev.txt
-            ./setup.py build_pbf
-            ./setup.py build_version
-            honcho run ./manage.py db upgrade
-        deactivate
-    popd
-}
-
-create_navitia_dbs() {
-    jormungandr_create_db
-    ed_create_db
-    kirin_create_db
-}
-
-drop_navitia_dbs() {
-    sudo -u postgres dropdb navitia 
-    sudo -u postgres dropdb jormungandr 
-    sudo -u postgres dropdb kirin
-}
-
-generate_nav_from() {
-    ED_BUILD_PATH="$_NAVITIA_BUILD_DIR_/ed/"
-    COVERAGE_PATH=$(realpath .)
-
-    if [[ $1 ]]; then NAVITIA_PATH=$(realpath $1); fi
-    if [[ $2 ]]; then ED_BUILD_PATH=$(realpath $2); fi 
-    if [[ $3 ]]; then COVERAGE_PATH=$(realpath $3); fi
-	
-	echo "NAVITIA_PATH=$NAVITIA_PATH"
-	echo "ED_BUILD_PATH=$ED_BUILD_PATH"
-	echo "COVERAGE_PATH=$COVERAGE_PATH"
-
-    pushd "$NAVITIA_PATH/source/eitri"
-        virtual_env_workon_or_create eitri requirements.txt
-            EITRI_CMD="python eitri.py -d $COVERAGE_PATH -o $COVERAGE_PATH/data.nav.lz4 -e $ED_BUILD_PATH"
-            echo $EITRI_CMD
-            $($EITRI_CMD)
-        deactivate
-    popd
-}
-
-generate_nav_from_bdd() {
-    local COVERAGE=$1
-    local PASSWD=$2
-    local HOST=$3
-    local CITIES_USER=$4
-    local CITIES_PWD=$5 
-
-    if [[ $# -lt 2 ]]; then
-        echo "usage:"
-        echo "      generate_nav_from_bdd <COVERAGE> <PWD> <HOST> <CITIES_USER> <CITIES_PWD>"
-        echo ""
-        echo "Environment Variables :"
-        echo "    NAVITIA_BUILD_DIR : path to Kraken Binary"
-        echo ''
-        return 0
-    fi
-    if [[ ! $NAVITIA_BUILD_DIR ]]; then 
-        NAVITIA_BUILD_DIR=$_NAVITIA_BUILD_DIR_; 
-    fi
-
-    CONNECTION_STR="postgresql://$COVERAGE:$PASSWD@$HOST/$COVERAGE"
-    CITIES_STR="postgresql://$CITIES_USER:$CITIES_PWD@$HOST/cities"
-    echo "- connection string : $CONNECTION_STR"
-    echo "- cities string : $CITIES_STR"
-    echo "- Kraken build dir : $NAVITIA_BUILD_DIR"; 
-    local ED_CMD="$NAVITIA_BUILD_DIR/ed/ed2nav -o "./data.nav.lz4" --connection-string $CONNECTION_STR --cities-connection-string $CITIES_STR"
-    echo "- $ED_CMD"
-    eval $ED_CMD
-}
-
-make_test_navitia() {
-    VIRTUAl_ENV="jormung"
-    PARAMS=$@
-
-    VENV=$(workon | egrep $VIRTUAl_ENV)
-    if [ ! $VENV ]; then 
-        echo "No virtual env found named: $VIRTUAl_ENV"
-        return 0
-    fi
-
-    workon $VIRTUAl_ENV
-    make test $PARAMS -j4
-    deactivate
-}
-
-make_test_verbose_navitia() {
-    navitia-make_test VERBOSE=True
-}
-
-NAVITIA_PORT=5000
-SYTRAL_RT_PORT=5001
-
-jormun() {
-    #KEY=$1;  if [ ! $KEY ]; then KEY="default"; fi
-    #SOCKET=$2; if [ !$SOCKET ]; then SOCKET="ipc:///tmp/"$KEY"_kraken"; fi
-
-    jormungandr_update_db
-
-    pushd "$NAVITIA_PATH/source/jormungandr"
-        PYTHONPATH=.:../navitiacommon/ 
-
-        virtual_env_workon_or_create jormun requirements.txt
-            FLASK_APP=jormungandr:app flask run --without-threads --debugger -h 0.0.0.0 -p "$NAVITIA_PORT" --reload
-        deactivate
-    popd
-}
-
-kraken-realtime() {
-    export KRAKEN_GENERAL_is_realtime_enabled=True
-    export KRAKEN_GENERAL_is_realtime_add_enabled=True
-    export KRAKEN_GENERAL_kirin_timeout=1800
-
-    export KRAKEN_BROKER_host="localhost"
-    export KRAKEN_BROKER_port=5672
-    export KRAKEN_BROKER_username=""
-    export KRAKEN_BROKER_password=""
-    export KRAKEN_BROKER_exchange="navitia"
-
-    kraken $*
-}
-
-run-kraken() {
-    KEY=`basename $(pwd)`; if [ $1 ]; then KEY=$1; fi
-    DB="data.nav.lz4"; if [ $2 ]; then DB=$2; fi
-
-    export KRAKEN_GENERAL_instance_name=$KEY
-    export KRAKEN_GENERAL_zmq_socket="ipc:///tmp/"$KEY"_kraken"
-    export KRAKEN_GENERAL_database=$DB
-
-    echo "KRAKEN_GENERAL_instance_name : $KRAKEN_GENERAL_instance_name"
-    echo "KRAKEN_GENERAL_zmq_socket: $KRAKEN_GENERAL_zmq_socket"
-    echo "KRAKEN_GENERAL_database: $KRAKEN_GENERAL_database"
-    $_NAVITIA_BUILD_DIR_/kraken/kraken
-}
-
-kraken-chaos() {
-    PWD=$1 
-    USER=$2
-    DBNAME=$3
-    HOST=$4
-
-    USER=$2; if [ ! $USER ]; then USER="navitia"; fi
-    DBNAME=$3; if [ ! $DBNAME ]; then DBNAME="chaos_prod"; fi
-    HOST=$4; if [ ! $HOST ]; then HOST=""; fi
-
-    if [[ $# -lt 1 ]] || [[ ! $PWD ]]; then
-        echo "No Password provided"; 
-        echo "usage:"
-        echo "      kraken_chaos <PWD> [USER] [DBNAME] []"
-        echo ''
-        return 0
-    fi
-
-    export KRAKEN_CHAOS_database="host=$HOST user=$USER dbname=$DBNAME password=$PWD"
-    
-    kraken
-}
-
-kirin() {
-    INSTANCE_NAME=$1; if [ ! $INSTANCE_NAME ]; then INSTANCE_NAME="default"; fi
-
-    pushd "$KISIO_SRC/kirin"
-        virtual_env_workon_or_create kirin requirements_dev.txt
-            export KIRIN_NAVITIA_URL="http://localhost:$NAVITIA_PORT/"
-            export KIRIN_NAVITIA_INSTANCE=$INSTANCE_NAME
-            export KIRIN_NAVITIA_TOKEN=None
-            export KIRIN_CONTRIBUTOR='realtime.cots'
-            echo "Kirin available at http://127.0.0.1:54746"
-            honcho start
-        deactivate
-    popd
-}
-
-sytral_rt(){
-    pushd "$KISIO_SRC/sytralrt"
-        PORT="$SYTRAL_RT_PORT" GIN_MODE=release ./sytral-rt --departures-refresh=1s --departures-uri file:///home/ogeorget/dev/kisio/source/sytralrt/fixtures/extract_edylic.txt --parkings-refresh=1s  --parkings-uri file://`realpath fixtures/parkings.txt` --log-level info
-    popd
-}
-
-
-navitia_print_rt_base64_protobuf() {
-    pushd "$NAVITIA_SRC_PATH/jormungandr/tests" > /dev/null
-        virtual_env_workon_or_create jormun ../requirements_dev.txt > /dev/null
-            python -c "
-import gtfs_realtime_pb2
-fm = gtfs_realtime_pb2.FeedMessage()
-
-from base64 import b64decode
-fm.ParseFromString(b64decode(u'$1')) 
-
-from google.protobuf import text_format, json_format
-print(json_format.MessageToJson(fm))
-"
-        deactivate
-    popd > /dev/null
-}
-
-__load_file_if_exists ~/dev/kisio/source/navitia-configurator/bash-tools/tyr.sh # Navitia
+#KISIO_SRC="/home/ogeorget/dev/kisio/source"
+#NAVITIA_PATH="/home/ogeorget/dev/kisio/source/navitia"
+#NAVITIA_SRC_PATH="$NAVITIA_PATH/source"
+#TYR_PATH=$NAVITIA_SRC_PATH/tyr
+#
+#export PYTHONPATH="$NAVITIA_SRC_PATH/navitiacommon"
+#_NAVITIA_BUILD_DIR_="/home/ogeorget/dev/kisio/build/navitia/release/"
+#
+#jormungandr_update_db() {
+#    pushd $TYR_PATH
+#        virtual_env_workon_or_create tyr requirements_dev.txt
+#            PYTHONPATH=$PYTHONPATH:$TYR_PATH ./manage_tyr.py db upgrade
+#        deactivate
+#    popd
+#}
+#
+#jormungandr_create_db() {
+#    create_postgres_db jormungandr
+#    jormungandr_update_db 
+#}
+#
+#create_ed_db() {
+#    [[ $1 ]] && DB_NAME=$1 || DB_NAME="navitia"
+#
+#    create_postgres_db $DB_NAME
+#
+#    ALEMBIC_DIR="$NAVITIA_SRC_PATH/sql"
+#    pushd $ALEMBIC_DIR
+#        virtual_env_workon_or_create sql requirements.txt
+#            PYTHONPATH=. alembic -x dbname="postgresql://localhost/$DB_NAME" upgrade head
+#        deactivate
+#    popd
+#}
+#
+#
+#create_cities_db() {
+#    [[ $1 ]] && DB_NAME=$1 || DB_NAME="cities"
+#    create_postgres_db $DB_NAME
+#
+#    pushd $NAVITIA_SRC_PATH/cities
+#        virtual_env_workon_or_create sql requirements.txt
+#            PYTHONPATH=. alembic -x dbname="postgresql://localhost/$DB_NAME" upgrade head
+#        deactivate
+#    popd
+#}
+#
+#createi_kirin_db() {
+#    create_postgres_db kirin
+#    pushd "$KISIO_SRC/kirin"
+#        git submodule update --init --recursive
+#
+#        virtual_env_workon_or_create kirin requirements_dev.txt
+#            ./setup.py build_pbf
+#            ./setup.py build_version
+#            honcho run ./manage.py db upgrade
+#        deactivate
+#    popd
+#}
+#
+#create_navitia_dbs() {
+#    jormungandr_create_db
+#    ed_create_db
+#    kirin_create_db
+#}
+#
+#drop_navitia_dbs() {
+#    sudo -u postgres dropdb navitia 
+#    sudo -u postgres dropdb jormungandr 
+#    sudo -u postgres dropdb kirin
+#}
+#
+#generate_nav_from() {
+#    ED_BUILD_PATH="$_NAVITIA_BUILD_DIR_/ed/"
+#    COVERAGE_PATH=$(realpath .)
+#
+#    if [[ $1 ]]; then NAVITIA_PATH=$(realpath $1); fi
+#    if [[ $2 ]]; then ED_BUILD_PATH=$(realpath $2); fi 
+#    if [[ $3 ]]; then COVERAGE_PATH=$(realpath $3); fi
+#	
+#	echo "NAVITIA_PATH=$NAVITIA_PATH"
+#	echo "ED_BUILD_PATH=$ED_BUILD_PATH"
+#	echo "COVERAGE_PATH=$COVERAGE_PATH"
+#
+#    pushd "$NAVITIA_PATH/source/eitri"
+#        virtual_env_workon_or_create eitri requirements.txt
+#            EITRI_CMD="python eitri.py -d $COVERAGE_PATH -o $COVERAGE_PATH/data.nav.lz4 -e $ED_BUILD_PATH"
+#            echo $EITRI_CMD
+#            $($EITRI_CMD)
+#        deactivate
+#    popd
+#}
+#
+#generate_nav_from_bdd() {
+#    local COVERAGE=$1
+#    local PASSWD=$2
+#    local HOST=$3
+#    local CITIES_USER=$4
+#    local CITIES_PWD=$5 
+#
+#    if [[ $# -lt 2 ]]; then
+#        echo "usage:"
+#        echo "      generate_nav_from_bdd <COVERAGE> <PWD> <HOST> <CITIES_USER> <CITIES_PWD>"
+#        echo ""
+#        echo "Environment Variables :"
+#        echo "    NAVITIA_BUILD_DIR : path to Kraken Binary"
+#        echo ''
+#        return 0
+#    fi
+#    if [[ ! $NAVITIA_BUILD_DIR ]]; then 
+#        NAVITIA_BUILD_DIR=$_NAVITIA_BUILD_DIR_; 
+#    fi
+#
+#    CONNECTION_STR="postgresql://$COVERAGE:$PASSWD@$HOST/$COVERAGE"
+#    CITIES_STR="postgresql://$CITIES_USER:$CITIES_PWD@$HOST/cities"
+#    echo "- connection string : $CONNECTION_STR"
+#    echo "- cities string : $CITIES_STR"
+#    echo "- Kraken build dir : $NAVITIA_BUILD_DIR"; 
+#    local ED_CMD="$NAVITIA_BUILD_DIR/ed/ed2nav -o "./data.nav.lz4" --connection-string $CONNECTION_STR --cities-connection-string $CITIES_STR"
+#    echo "- $ED_CMD"
+#    eval $ED_CMD
+#}
+#
+#make_test_navitia() {
+#    VIRTUAl_ENV="jormung"
+#    PARAMS=$@
+#
+#    VENV=$(workon | egrep $VIRTUAl_ENV)
+#    if [ ! $VENV ]; then 
+#        echo "No virtual env found named: $VIRTUAl_ENV"
+#        return 0
+#    fi
+#
+#    workon $VIRTUAl_ENV
+#    make test $PARAMS -j4
+#    deactivate
+#}
+#
+#make_test_verbose_navitia() {
+#    navitia-make_test VERBOSE=True
+#}
+#
+#NAVITIA_PORT=5000
+#SYTRAL_RT_PORT=5001
+#
+#jormun() {
+#    #KEY=$1;  if [ ! $KEY ]; then KEY="default"; fi
+#    #SOCKET=$2; if [ !$SOCKET ]; then SOCKET="ipc:///tmp/"$KEY"_kraken"; fi
+#
+#    jormungandr_update_db
+#
+#    pushd "$NAVITIA_PATH/source/jormungandr"
+#        PYTHONPATH=.:../navitiacommon/ 
+#
+#        virtual_env_workon_or_create jormun requirements.txt
+#            FLASK_APP=jormungandr:app flask run --without-threads --debugger -h 0.0.0.0 -p "$NAVITIA_PORT" --reload
+#        deactivate
+#    popd
+#}
+#
+#kraken-realtime() {
+#    export KRAKEN_GENERAL_is_realtime_enabled=True
+#    export KRAKEN_GENERAL_is_realtime_add_enabled=True
+#    export KRAKEN_GENERAL_kirin_timeout=1800
+#
+#    export KRAKEN_BROKER_host="localhost"
+#    export KRAKEN_BROKER_port=5672
+#    export KRAKEN_BROKER_username=""
+#    export KRAKEN_BROKER_password=""
+#    export KRAKEN_BROKER_exchange="navitia"
+#
+#    kraken $*
+#}
+#
+#run-kraken() {
+#    KEY=`basename $(pwd)`; if [ $1 ]; then KEY=$1; fi
+#    DB="data.nav.lz4"; if [ $2 ]; then DB=$2; fi
+#
+#    export KRAKEN_GENERAL_instance_name=$KEY
+#    export KRAKEN_GENERAL_zmq_socket="ipc:///tmp/"$KEY"_kraken"
+#    export KRAKEN_GENERAL_database=$DB
+#
+#    echo "KRAKEN_GENERAL_instance_name : $KRAKEN_GENERAL_instance_name"
+#    echo "KRAKEN_GENERAL_zmq_socket: $KRAKEN_GENERAL_zmq_socket"
+#    echo "KRAKEN_GENERAL_database: $KRAKEN_GENERAL_database"
+#    $_NAVITIA_BUILD_DIR_/kraken/kraken
+#}
+#
+#kraken-chaos() {
+#    PWD=$1 
+#    USER=$2
+#    DBNAME=$3
+#    HOST=$4
+#
+#    USER=$2; if [ ! $USER ]; then USER="navitia"; fi
+#    DBNAME=$3; if [ ! $DBNAME ]; then DBNAME="chaos_prod"; fi
+#    HOST=$4; if [ ! $HOST ]; then HOST=""; fi
+#
+#    if [[ $# -lt 1 ]] || [[ ! $PWD ]]; then
+#        echo "No Password provided"; 
+#        echo "usage:"
+#        echo "      kraken_chaos <PWD> [USER] [DBNAME] []"
+#        echo ''
+#        return 0
+#    fi
+#
+#    export KRAKEN_CHAOS_database="host=$HOST user=$USER dbname=$DBNAME password=$PWD"
+#    
+#    kraken
+#}
+#
+#kirin() {
+#    INSTANCE_NAME=$1; if [ ! $INSTANCE_NAME ]; then INSTANCE_NAME="default"; fi
+#
+#    pushd "$KISIO_SRC/kirin"
+#        virtual_env_workon_or_create kirin requirements_dev.txt
+#            export KIRIN_NAVITIA_URL="http://localhost:$NAVITIA_PORT/"
+#            export KIRIN_NAVITIA_INSTANCE=$INSTANCE_NAME
+#            export KIRIN_NAVITIA_TOKEN=None
+#            export KIRIN_CONTRIBUTOR='realtime.cots'
+#            echo "Kirin available at http://127.0.0.1:54746"
+#            honcho start
+#        deactivate
+#    popd
+#}
+#
+#sytral_rt(){
+#    pushd "$KISIO_SRC/sytralrt"
+#        PORT="$SYTRAL_RT_PORT" GIN_MODE=release ./sytral-rt --departures-refresh=1s --departures-uri file:///home/ogeorget/dev/kisio/source/sytralrt/fixtures/extract_edylic.txt --parkings-refresh=1s  --parkings-uri file://`realpath fixtures/parkings.txt` --log-level info
+#    popd
+#}
+#
+#
+#navitia_print_rt_base64_protobuf() {
+#    pushd "$NAVITIA_SRC_PATH/jormungandr/tests" > /dev/null
+#        virtual_env_workon_or_create jormun ../requirements_dev.txt > /dev/null
+#            python -c "
+#import gtfs_realtime_pb2
+#fm = gtfs_realtime_pb2.FeedMessage()
+#
+#from base64 import b64decode
+#fm.ParseFromString(b64decode(u'$1')) 
+#
+#from google.protobuf import text_format, json_format
+#print(json_format.MessageToJson(fm))
+#"
+#        deactivate
+#    popd > /dev/null
+#}
+#
+#__load_file_if_exists ~/dev/kisio/source/navitia-configurator/bash-tools/tyr.sh # Navitia

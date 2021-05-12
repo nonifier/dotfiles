@@ -1,0 +1,2 @@
+[[ -z "$PYTHONPATH" ]] && PYTHONPATH=~/dev/src/metavision/utils/python || PYTHONPATH=$PYTHONPATH:~/dev/src/metavision/utils/python
+

@@ -2,8 +2,9 @@
     link:
         create: true
         relink: true
+        force: true
 
-- clean: []
+- clean: ['~']
 
 - link: 
     ~/.bashrc: config/bash/bashrc
@@ -21,18 +22,27 @@
     ~/.pdbrc.py: config/pdbrc.py
 
 - shell:
-    - command: sudo apt install -y clang-tools-9 clangd-9 libssl-dev pass empty-expect neovim git ssh httpie
-      description: == Install packagages
-    - command: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 900
+    - [ sudo snap install nvim --classic ]
+    - [ sudo snap install ripgrep --classic ]
+    - command: 
+        sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' 
+    - description: == Install packagages
+      command: sudo apt install -y clang-tools-9 clangd-9 libssl-dev pass empty-expect git ssh httpie
+    - description: == Configure alternatives
+      command: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 900
             && sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 900 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-9
-      description: == Configure alternatives
-    - command:
-        sudo apt install -y polybar fzf
-      description: "Ubuntu > 19 install"
-    - command: 
-            sudo apt install -y i3 feh alacritty compton rofi
-            && pip3 install pywal
-      description: == Colour manager (ie. https://github.com/dylanaraps/pywal/wiki/Installation#table-of-contents)
-    - command: 
-          "[ -d ~/.password-store/ ] || git clone git@github.com:nonifier/password-store.git ~/.password-store/"
-      description: == Install password-store database
+    - description: Ubuntu 18 install
+      command:
+        "[[ `lsb_release -c -s` == 'bionic' ]] && echo 'Ubuntu 18' || exit 0"
+    - description: Ubuntu 20 install
+      command:
+        "[[ `lsb_release -c -s` == 'focal' ]] && sudo apt install -y polybar fzf || exit 0" 
+      #- 
+      #command: 
+      #       sudo apt install -y i3 feh alacritty compton rofi
+      #description: == Colour manager (ie. https://github.com/dylanaraps/pywal/wiki/Installation#table-of-contents)
+    - description: Password-store
+      command: '[[ -d ~/.password-store/ ]] || git clone git@github.com:nonifier/password-store.git ~/.password-store/'
+    - description: Password-store host app for Firefox
+      command: '[[ -d ~/.mozilla/native-messaging-hosts/passff.py ]] || (curl -sSL github.com/passff/passff-host/releases/latest/download/install_host_app.sh | bash -s -- firefox)'
+      
