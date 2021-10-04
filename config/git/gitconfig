@@ -49,3 +49,16 @@
 	smudge = git-lfs smudge -- %f
 [pull]
 	rebase = false
+
+[difftool "nvimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+[mergetool "nvimdiff4"]
+	cmd = nvim -d $LOCAL $BASE $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[difftool]
+    prompt = true
+[diff]
+    tool = nvimdiff
+
+[merge]
+	tool = nvimdiff4
+
