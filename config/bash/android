@@ -1,0 +1,5 @@
+# Android
+PATH+=:/home/ogeorget/Android/Sdk/platform-tools
+
+# Android Studio
+PATH+=:/home/ogeorget/dev/android-studio/bin

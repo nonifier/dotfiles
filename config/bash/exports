@@ -39,8 +39,5 @@ PATH+=:/usr/local/go/bin:$GOPATH/bin
 # Rust 
 PATH+=:/home/ogeorget/.cargo/bin
 
-# Android
-PATH+=:/home/ogeorget/Android/Sdk/platform-tools
-
 # Pass
 export PASSWORD_STORE_GENERATED_LENGTH=64 
