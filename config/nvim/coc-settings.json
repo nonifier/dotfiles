@@ -7,6 +7,9 @@
       "filetypes": ["c", "cpp", "objc", "objcpp"]
     }
   },
-  "python.jediEnabled": false,
-  "coc.preferences.extensionUpdateCheck": "daily"
+  "coc.preferences.extensionUpdateCheck": "daily",
+  "python.pythonPath": "python3",
+  "python.analysis.extraPaths": [
+      "/home/ogeorget/dev/src/metavision/utils/python"
+  ]
 }
