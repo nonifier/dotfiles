@@ -46,7 +46,7 @@ function __load_file_if_exists() {
 # Load all files under the .config/bash/ directory 
 function __load_bash_files_from_dir() {
     for f in $1; do 
-        [[ ${f##*/} != "bashrc" ]] && source $f 
+        [[ ${f##*/} != "bashrc" ]] && echo "--sourcing $f" && source "$f"
     done
 }
 
