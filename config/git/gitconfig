@@ -32,6 +32,8 @@
 	df = diff
 	dc = diff --cached
 	dt = difftool -y
+    si = switch
+    rs = restore
 
 [color]
 	ui = always
