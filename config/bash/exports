@@ -20,14 +20,27 @@ export COLOR_BRIGHT_CYAN='\[\033[1;36m\]'
 export COLOR_WHITE='\[\033[0;37m\]'
 export COLOR_BRIGHT_WHITE='\[\033[1;37m\]'
 
-export GOPATH=/home/ogeorget/go
-
-export PATH=:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+export PATH=
 PATH+=:/home/ogeorget/.local/bin
-PATH+=:/usr/local/go/bin
-PATH+=:/home/ogeorget/dev/github/fzf/bin
+PATH+=:/usr/local/sbin
+PATH+=:/usr/local/bin
+PATH+=:/usr/sbin
+PATH+=:/usr/bin
+PATH+=:/sbin
+PATH+=:/bin
+PATH+=:/usr/games
+PATH+=:/usr/local/games
+PATH+=:/snap/bin
+
+# GO lang
+export GOPATH=/home/ogeorget/go
+PATH+=:/usr/local/go/bin:$GOPATH/bin
+
+# Rust 
 PATH+=:/home/ogeorget/.cargo/bin
-PATH+=:$GOPATH/bin
 
+# Android
+PATH+=:/home/ogeorget/Android/Sdk/platform-tools
 
+# Pass
 export PASSWORD_STORE_GENERATED_LENGTH=64 

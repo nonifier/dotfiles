@@ -2,12 +2,3 @@
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 __load_file_if_exists /etc/bash_completion
-
-# Load Git auto completion
-__load_file_if_exists /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh
-
-__load_file_if_exists ~/dev/kisio/source/navitia-configurator/bash-tools/tyr.sh # Navitia
-__load_file_if_exists ~/.travis/travis.sh # added by travis gem
-__load_file_if_exists ~/.fzf.bash # FZF !
-__load_file_if_exists ~/.rvm/scripts/rvm # Ruby RVM
-

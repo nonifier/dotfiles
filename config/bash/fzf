@@ -1,0 +1,3 @@
+__load_file_if_exists ~/.fzf.bash # FZF !
+
+PATH+=:/home/ogeorget/dev/github/fzf/bin
