@@ -1,2 +1,4 @@
-[[ -z "$PYTHONPATH" ]] && PYTHONPATH=~/dev/src/metavision/utils/python || PYTHONPATH=$PYTHONPATH:~/dev/src/metavision/utils/python
+local prophesee_python_path=~/dev/src/metavision/utils/python:~/dev/src/metavision/utils/bamboo
+
+[[ -z "$PYTHONPATH" ]] && PYTHONPATH=$prophesee_python_path || PYTHONPATH=$PYTHONPATH:$prophesee_python_path
 
