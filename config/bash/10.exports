@@ -21,7 +21,7 @@ export COLOR_WHITE='\[\033[0;37m\]'
 export COLOR_BRIGHT_WHITE='\[\033[1;37m\]'
 
 export PATH=
-PATH+=:/home/ogeorget/.local/bin
+PATH+=:$HOME/.local/bin
 PATH+=:/usr/local/sbin
 PATH+=:/usr/local/bin
 PATH+=:/usr/sbin
@@ -33,11 +33,11 @@ PATH+=:/usr/local/games
 PATH+=:/snap/bin
 
 # GO lang
-export GOPATH=/home/ogeorget/go
+export GOPATH=$HOME/go
 PATH+=:/usr/local/go/bin:$GOPATH/bin
 
 # Rust 
-PATH+=:/home/ogeorget/.cargo/bin
+PATH+=:$HOME/.cargo/bin
 
 # Pass
 export PASSWORD_STORE_GENERATED_LENGTH=64 
