@@ -26,8 +26,8 @@
     - [ sudo snap install nvim --classic ]
     - [ sudo snap install ripgrep --classic ]
     - [ sudo snap install curl --classic ]
-    - command: sh -c 'curl -L "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $HOME/.local/share/nvim/site/autoload/plug.vim'
-      description: == Install nvim plug
+    - description: == Install nvim plug
+      command: sh -c 'curl -L "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $HOME/.local/share/nvim/site/autoload/plug.vim'
     - description: == Install packagages
       command: sudo apt install -y libssl-dev pass git ssh httpie fzf python3-pip 
     - description: == Install Powerline
