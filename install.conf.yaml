@@ -25,19 +25,16 @@
 - shell:
     - [ sudo snap install nvim --classic ]
     - [ sudo snap install ripgrep --classic ]
-    - command: 
-        sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' 
+    - [ sudo snap install curl --classic ]
+    - command: sh -c 'curl -L "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $HOME/.local/share/nvim/site/autoload/plug.vim'
+      description: == Install nvim plug
     - description: == Install packagages
-      command: sudo apt install -y clang-tools-9 clangd-9 libssl-dev pass empty-expect git ssh httpie
-    - description: == Configure alternatives
-      command: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 900
-            && sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 900 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-9
-    - description: Ubuntu 18 install
-      command:
-        "[[ `lsb_release -c -s` == 'bionic' ]] && echo 'Ubuntu 18' || exit 0"
-    - description: Ubuntu 20 install
-      command:
-        "[[ `lsb_release -c -s` == 'focal' ]] && sudo apt install -y polybar fzf || exit 0" 
+      command: sudo apt install -y libssl-dev pass git ssh httpie fzf python3-pip 
+    - description: == Install Powerline
+      command: sudo apt install -y powerline powerline-doc powerline-gitstatus python3-powerline
+      #- description: == Configure alternatives
+      #command: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 900
+      #&& sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 900 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-9
       #- 
       #command: 
       #       sudo apt install -y i3 feh alacritty compton rofi

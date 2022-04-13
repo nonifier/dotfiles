@@ -30,12 +30,8 @@ if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-
-# Add default ssh-key to ssh agent
-if [[ -x `which pass 2>/dev/null` ]]; then
-    empty -f ssh-add
-    pass show ssh/id_rsa | head -n1 | empty -s 
-fi
+# load gpg key
+gpg --list-keys Nonifier >/dev/null || gpg --import ~/.gnupg/woam@nonifier.com.priv 
 
 function __load_file_if_exists() {
     if [[ -f "$1" ]]; then
@@ -54,4 +50,3 @@ function __load_bash_files_from_dir() {
 __load_bash_files_from_dir "$HOME/.config/bash/*" 
 
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
