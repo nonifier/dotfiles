@@ -11,10 +11,7 @@ HISTFILESIZE=8000
 HISTCONTROL=ignoreboth:erasedups 
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r" # After each command, append to the history file and reread it
 
-(which nvim &>/dev/null && EDITOR=`which nvim`)  \
-    || (which vim &>/dev/null && EDITOR=`which vim`) \
-        || (which vi &>/dev/null && EDITOR=`which vi`) \
-            || (which nano &>/dev/null && EDITOR=`which nano`)
+EDITOR=`which nvim`
 
 shopt -s autocd # a directory is executed as if it were the argument to the cd command.
 shopt -s checkwinsize # check and update the values of LINES and COLUMNS.
