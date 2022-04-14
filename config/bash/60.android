@@ -1,6 +1,11 @@
 # Android
-PATH+=:/home/ogeorget/Android/Sdk/platform-tools/
-PATH+=:/home/ogeorget/Android/Sdk/emulator/
+PATH+=:$HOME/Android/Sdk/platform-tools/
+PATH+=:$HOME/Android/Sdk/emulator/
 
 # Android Studio
-PATH+=:/home/ogeorget/dev/android-studio/bin/
+ANDROID_STUDIO_PATH=$HOME/dev/android-studio
+PATH+=:$ANDROID_STUDIO_PATH/bin/
+
+# JAVA for Android Studio
+JAVA_HOME=$ANDROID_STUDIO_PATH/jre
+PATH+=:$JAVA_HOME/bin
