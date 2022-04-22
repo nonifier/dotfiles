@@ -7,7 +7,7 @@
     "git",
     "git_stash",
     "jobs",
-    "set_term_title",
+    "exit_code",
     "root"
   ]
 }
