@@ -21,17 +21,21 @@
     ~/.gitconfig: config/git/gitconfig
     ~/.gitignore: config/git/gitignore
     ~/.pdbrc.py: config/pdbrc.py
+    ~/.ssh/config: config/ssh/config
 
 - shell:
     - [ sudo snap install nvim --classic ]
     - [ sudo snap install ripgrep --classic ]
     - [ sudo snap install curl --classic ]
     - description: == Install nvim plug
-      command: sh -c 'curl -L "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $HOME/.local/share/nvim/site/autoload/plug.vim'
+      command: sh -c '[[ -f $HOME/.local/share/nvim/site/autoload/plug.vim ]] || curl -L "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $HOME/.local/share/nvim/site/autoload/plug.vim'
+
     - description: == Install packagages
       command: sudo apt install -y libssl-dev pass git ssh httpie fzf python3-pip 
+        
     - description: == Install Powerline
       command: sudo apt install -y powerline powerline-doc powerline-gitstatus python3-powerline
+
       #- description: == Configure alternatives
       #command: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 900
       #&& sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 900 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-9
@@ -39,8 +43,17 @@
       #command: 
       #       sudo apt install -y i3 feh alacritty compton rofi
       #description: == Colour manager (ie. https://github.com/dylanaraps/pywal/wiki/Installation#table-of-contents)
+      #
     - description: Password-store
       command: '[[ -d ~/.password-store/ ]] || git clone git@github.com:nonifier/password-store.git ~/.password-store/'
+
     - description: Password-store host app for Firefox
-      command: '[[ -d ~/.mozilla/native-messaging-hosts/passff.py ]] || (curl -sSL github.com/passff/passff-host/releases/latest/download/install_host_app.sh | bash -s -- firefox)'
-      
+      command: '[[ -f ~/.mozilla/native-messaging-hosts/passff.py ]] || (curl -sSL github.com/passff/passff-host/releases/latest/download/install_host_app.sh | bash -s -- firefox)'
+
+    - [ "mkdir -p ~/.ssh/{nonifier,prophesee}", Creating SSH folders ] 
+    - [ "chmod 0700 ~/.ssh/{nonifier,prophesee}", Setting permissions ]
+    - '[[ -f ~/.ssh/nonifier/id_rsa ]] || pass ssh/id_rsa > ~/.ssh/nonifier/id_rsa | head -n +3; chmod 600 ~/.ssh/nonifier/id_rsa'
+    - '[[ -f ~/.ssh/nonifier/id_rsa.pub ]] || pass ssh/id_rsa.pub > ~/.ssh/nonifier/id_rsa.pub'
+    - '[[ -f ~/.ssh/prophesee/id_ed25519 ]] || pass prophesee/ssh/id_ed25519 | tail -n +3> ~/.ssh/prophesee/id_ed25519; chmod 600 ~/.ssh/prophesee/id_ed25519'
+    - '[[ -f ~/.ssh/prophesee/id_ed25519.pub ]] || pass prophesee/ssh/id_ed25519.pub > ~/.ssh/prophesee/id_ed25519.pub'
+

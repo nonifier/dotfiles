@@ -1,0 +1,13 @@
+# Nonifier github
+Host github.com
+    User git
+    AddKeysToAgent yes
+    LogLevel VERBOSE
+    Match exec "bash -c '[[ $SSH_USER == 'nonifier' ]]'"
+    IdentityFile ~/.ssh/nonifier/id_rsa 
+
+Host *
+    AddKeysToAgent yes
+    IdentityFile ~/.ssh/prophesee/id_ed25519 
+    LogLevel VERBOSE
+

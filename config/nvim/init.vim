@@ -62,6 +62,8 @@ set noswapfile
 hi CursorLine cterm=bold ctermfg=None ctermbg=None guibg=None
 au FocusGained,BufEnter,CursorMoved,CursorHold * checktime
 
+set spell
+
 
 "" --- COC config file --- 
 " TextEdit might fail if hidden is not set.
