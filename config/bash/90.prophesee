@@ -2,3 +2,94 @@ local prophesee_python_path=~/dev/src/bitbucket.prophesee.ai/metavision/utils/py
 
 [[ -z "$PYTHONPATH" ]] && PYTHONPATH=$prophesee_python_path || PYTHONPATH=$PYTHONPATH:$prophesee_python_path
 
+function _git_local_branch() {
+    git branch --show-current
+}
+
+function _git_local_sha1(){
+    git rev-parse @
+}
+
+function _url_git_local_branch() {
+   urlencode $(_git_local_branch)
+}
+
+function _call_jenkins_api() {
+    # $1 - Jenkins API path
+   http \
+       --timeout 3 \
+       --json \
+       --auth "ogeorget:`pass show prophesee/jenkins/chronocam.net|grep token|cut -d: -f2`" \
+       POST "https://devops.chronocam.net/metavision-jenkins/job/metavision_development_validation/job/$1/api/json"
+}
+
+function _jenkins_lastbuild() {
+    # $1 - git branch name
+    _call_jenkins_api "$1/lastBuild"
+}
+
+function _jenkins_status() {
+    # $1 - git branch name
+    _jenkins_lastbuild $1 | jq  \
+    " .cur_time_sec=$(date +%s) | 
+      .timestamp_sec=(.timestamp/1000) |
+      .elapsed_sec=(.cur_time_sec - .timestamp_sec) |
+      .estimate_sec=(.estimatedDuration/1000) |
+      .remain_sec=(.estimate_sec - .elapsed_sec) |
+    {   
+        name: .fullDisplayName,
+        sha1: {
+            local: \"$(_git_local_sha1)\",
+            remote: [ ..|.branch?[]? | select(.name != \"main\")] | first | .SHA1,
+        },
+        res: (.result // { 
+            in_progress: .inProgress, 
+            time: (
+            if .estimatedDuration < 0 then { 
+                elapsed: ((.elapsed_sec|round|tostring) + \" sec\"),
+            } else { 
+                remain: ((.remain_sec|round|tostring) + \" sec\"),
+                progress: ((100- .remain_sec*100 / .estimate_sec|round|tostring) + \"%\")
+            } end)
+        }),
+        url: .url
+
+    }"
+}
+
+function _jenkins_online() {
+    # $1 - git branch name
+    _jenkins_status $1 | jq -r --tab "[.name, .res.time.progress // .res ] | @tsv"
+}
+
+function jenkins_branch_lastbuild() {
+    _jenkins_lastbuild $(_url_git_local_branch) 
+}
+
+function jenkins_branch_status() { 
+    _jenkins_status $(_url_git_local_branch) 
+}
+
+function jenkins_branch_online() { 
+    _jenkins_online $(_url_git_local_branch) 
+}
+
+function jenkins_develop_lastbuild() { 
+    _jenkins_lastbuild $(urlencode develop) 
+}
+
+function jenkins_develop_status() { 
+    _jenkins_status $(urlencode develop) 
+}
+
+function jenkins_develop_online() { 
+    _jenkins_online $(urlencode develop) 
+ }
+
+function jenkins_branch_build() {
+    _call_jenkins_api $(_url_git_local_branch) | jq --exit-status .lastBuild && \
+        _call_jenkins_api $(_url_git_local_branch)/buildWithParameters  || \
+        _call_jenkins_api $(_url_git_local_branch)/build 
+    sleep 1s
+    _call_jenkins_api $(_url_git_local_branch)/lastBuild | jq '{url: .url}'
+}
