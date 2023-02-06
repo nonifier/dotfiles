@@ -17,20 +17,26 @@ function _url_git_local_branch() {
 function _call_jenkins_api() {
     # $1 - Jenkins API path
    http \
-       --timeout 3 \
+       --timeout 2 \
+       --check-status \
        --json \
        --auth "ogeorget:`pass show prophesee/jenkins/chronocam.net|grep token|cut -d: -f2`" \
-       POST "https://devops.chronocam.net/metavision-jenkins/job/metavision_development_validation/job/$1/api/json"
+       POST "https://devops.chronocam.net/metavision-jenkins/job/metavision_development_validation$1/api/json"
+}
+
+function _call_jenkins_job_api() {
+    # $1 - Jenkins  /job API path
+    _call_jenkins_api "/job/$1"
 }
 
 function _jenkins_lastbuild() {
-    # $1 - git branch name
-    _call_jenkins_api "$1/lastBuild"
+    # $1 - Jenkins Branch
+    _call_jenkins_job_api "$1/lastBuild"
 }
 
 function _jenkins_status() {
     # $1 - git branch name
-    _jenkins_lastbuild $1 | jq  \
+    _jenkins_lastbuild $1 | jq --exit-status \
     " .cur_time_sec=$(date +%s) | 
       .timestamp_sec=(.timestamp/1000) |
       .elapsed_sec=(.cur_time_sec - .timestamp_sec) |
@@ -57,7 +63,7 @@ function _jenkins_status() {
     }"
 }
 
-function _jenkins_online() {
+function _jenkins_oneline() {
     # $1 - git branch name
     _jenkins_status $1 | jq -r --tab "[.name, .res.time.progress // .res ] | @tsv"
 }
@@ -66,12 +72,22 @@ function jenkins_branch_lastbuild() {
     _jenkins_lastbuild $(_url_git_local_branch) 
 }
 
-function jenkins_branch_status() { 
-    _jenkins_status $(_url_git_local_branch) 
+function jenkins_branches() {
+    _call_jenkins_api | jq --exit-status ".jobs[]"
 }
 
-function jenkins_branch_online() { 
-    _jenkins_online $(_url_git_local_branch) 
+function jenkins_branch() {
+    jenkins_branches | jq -r '.name' | grep --color=never -i $(_url_git_local_branch)
+}
+
+function jenkins_branch_status() { 
+    jenkins_branch > /dev/null && 
+        (_jenkins_status $(_url_git_local_branch)) || 
+        (echo "Branch doesn't exist on Jenkins (forgot to push it hey ?!?)" && return 1)
+}
+
+function jenkins_branch_oneline() { 
+    _jenkins_oneline $(_url_git_local_branch) 
 }
 
 function jenkins_develop_lastbuild() { 
@@ -83,13 +99,13 @@ function jenkins_develop_status() {
 }
 
 function jenkins_develop_online() { 
-    _jenkins_online $(urlencode develop) 
+    _jenkins_oneline $(urlencode develop) 
  }
 
 function jenkins_branch_build() {
-    _call_jenkins_api $(_url_git_local_branch) | jq --exit-status .lastBuild && \
-        _call_jenkins_api $(_url_git_local_branch)/buildWithParameters  || \
-        _call_jenkins_api $(_url_git_local_branch)/build 
+    _call_jenkins_job_api $(_url_git_local_branch) | jq --exit-status .lastBuild > /dev/null && \
+        _call_jenkins_job_api $(_url_git_local_branch)/buildWithParameters  || \
+        _call_jenkins_job_api $(_url_git_local_branch)/build 
     sleep 1s
-    _call_jenkins_api $(_url_git_local_branch)/lastBuild | jq '{url: .url}'
+    _call_jenkins_job_api $(_url_git_local_branch)/lastBuild | jq '{url: .url}'
 }
