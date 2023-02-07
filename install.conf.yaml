@@ -24,14 +24,17 @@
     ~/.ssh/config: config/ssh/config
 
 - shell:
-    - [ sudo snap install nvim --classic ]
-    - [ sudo snap install ripgrep --classic ]
-    - [ sudo snap install curl --classic ]
+    - [ sudo snap install nvim --classic, Install NeoVim ]
+    - [ sudo snap install ripgrep --classic, Install RG ]
+    - [ sudo snap install curl --classic, Install Curl ]
+    - [ sudo snap install node --classic, Install NodeJS ]
     - description: == Install nvim plug
-      command: sh -c '[[ -f $HOME/.local/share/nvim/site/autoload/plug.vim ]] || curl -L "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $HOME/.local/share/nvim/site/autoload/plug.vim'
+      command: >
+        mkdir -p $HOME/.local/share/nvim/site/autoload;
+        [[ -f $HOME/.local/share/nvim/site/autoload/plug.vim ]] || curl -L "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $HOME/.local/share/nvim/site/autoload/plug.vim
 
     - description: == Install packagages
-      command: sudo apt install -y libssl-dev pass git ssh httpie fzf python3-pip 
+      command: sudo apt install -y libssl-dev pass git gitsome ssh httpie python3-pip 
         
     - description: == Install Powerline
       command: sudo apt install -y powerline powerline-doc powerline-gitstatus python3-powerline
@@ -45,7 +48,7 @@
       #description: == Colour manager (ie. https://github.com/dylanaraps/pywal/wiki/Installation#table-of-contents)
       #
     - description: Password-store
-      command: '[[ -d ~/.password-store/ ]] || git clone git@github.com:nonifier/password-store.git ~/.password-store/'
+      command: '[[ -d ~/.password-store/ ]] || git clone https://github.com/nonifier/password-store.git ~/.password-store/'
 
     - description: Password-store host app for Firefox
       command: '[[ -f ~/.mozilla/native-messaging-hosts/passff.py ]] || (curl -sSL github.com/passff/passff-host/releases/latest/download/install_host_app.sh | bash -s -- firefox)'
@@ -56,4 +59,9 @@
     - '[[ -f ~/.ssh/nonifier/id_rsa.pub ]] || pass ssh/id_rsa.pub > ~/.ssh/nonifier/id_rsa.pub'
     - '[[ -f ~/.ssh/prophesee/id_ed25519 ]] || pass prophesee/ssh/id_ed25519 | tail -n +3> ~/.ssh/prophesee/id_ed25519; chmod 600 ~/.ssh/prophesee/id_ed25519'
     - '[[ -f ~/.ssh/prophesee/id_ed25519.pub ]] || pass prophesee/ssh/id_ed25519.pub > ~/.ssh/prophesee/id_ed25519.pub'
+
+    - desription: Trust Key
+      command: >
+        [[ -f ~/.gnupg/woam@nonifier.com.priv ]] || echo "Please install ~/.gnupg/woam@nonifier.com.priv" ;
+        [[ -f ~/.gnupg/woam@nonifier.com.priv ]] && gpg --import ~/.gnupg/woam@nonifier.com.priv && echo $(gpg --list-keys | rg -B1 woam@nonifier | head -1 | tr -d '[:space:]'):6: | gpg --import-ownertrust;
 
