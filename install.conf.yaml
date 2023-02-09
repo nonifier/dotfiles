@@ -34,7 +34,7 @@
         [[ -f $HOME/.local/share/nvim/site/autoload/plug.vim ]] || curl -L "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $HOME/.local/share/nvim/site/autoload/plug.vim
 
     - description: == Install packagages
-      command: sudo apt install -y libssl-dev pass git gitsome ssh httpie python3-pip 
+      command: sudo apt install -y libssl-dev pass git gitsome git-lfs ssh httpie python3-pip python-is-python3  
         
     - description: == Install Powerline
       command: sudo apt install -y powerline powerline-doc powerline-gitstatus python3-powerline fonts-powerline
