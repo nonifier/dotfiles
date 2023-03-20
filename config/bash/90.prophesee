@@ -1,6 +1,5 @@
-local prophesee_python_path=~/dev/src/bitbucket.prophesee.ai/metavision/utils/python:~/dev/src/bitbucket.prophesee.ai/metavision/utils/bamboo
-
-[[ -z "$PYTHONPATH" ]] && PYTHONPATH=$prophesee_python_path || PYTHONPATH=$PYTHONPATH:$prophesee_python_path
+export PYTHONPATH=/home/ogeorget/dev/src/github/metavision/utils/python:$PYTHONPATH
+export PYTHONPATH=/home/ogeorget/dev/src/github/metavision/utils/ci:$PYTHONPATH
 
 function _git_local_branch() {
     git branch --show-current

@@ -1,15 +1,22 @@
 {
   "languageserver": {
-    "clangd": {
-      "command": "clangd",
-      "args": ["--background-index", "--pch-storage=disk", "-j=2"],
-      "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-      "filetypes": ["c", "cpp", "objc", "objcpp"]
+    "cmake": {
+      "command": "cmake-language-server",
+      "filetypes": ["cmake"],
+      "rootPatterns": [ "build/" ],
+      "initializationOptions": {
+        "buildDirectory": "build"
+      }
     }
+  },
+  "markdownlint.config": {
+      "default": true,
+      "MD007": false,
+      "line-length": false
   },
   "coc.preferences.extensionUpdateCheck": "daily",
   "python.pythonPath": "python3",
   "python.analysis.extraPaths": [
-      "/home/ogeorget/dev/src/metavision/utils/python"
+      "/home/ogeorget/dev/src/github/metavision/utils/python"
   ]
 }

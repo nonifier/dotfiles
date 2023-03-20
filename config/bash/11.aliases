@@ -22,6 +22,7 @@ alias lh='ls -alhFG'
 alias df='df -h'
 alias du='du -h'
 alias got='git'
+alias bat='batcat'
 
 alias ..='cd ..'
 alias ...='cd ../..'

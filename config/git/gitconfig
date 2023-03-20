@@ -71,3 +71,6 @@
 [merge]
 	tool = nvimdiff4
 
+[safe]
+	directory = /usr/src/powerline-shell/
+	directory = /usr/src/powerline-shell

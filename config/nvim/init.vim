@@ -20,7 +20,7 @@ map <Space> <leader>
 map <leader>w :w<cr>
 map <leader>q <C-w><C-q>
 
-map <leader>ff :FZF<cr>
+map <leader>ff :Files<cr>
 map <leader>fb :Buffers <cr>
 "map <leader>fw :Windows <cr>
 map <leader>fh :History <cr>
@@ -31,10 +31,10 @@ map <leader>ST :BTags <C-r>"<cr>
 map <leader>t :Tags <cr>
 map <leader>T :Tags <C-r>"<cr>
 
-map <leader>/ :BLine <C-r>"<cr>
+map <leader>/ :BLine <cr> 
 
-map <leader>rg :Rg! <cr>
-map <leader>RG :Rg <C-r>+<cr>
+map <leader>RG :Rg! <cr>
+map <leader>rg :Rg <C-r>/<cr>
 
 " Yank in special copy system register
 map <leader>yr yiw<leader>R 
