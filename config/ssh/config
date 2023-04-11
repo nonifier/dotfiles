@@ -2,12 +2,14 @@
 Host github.com
     User git
     AddKeysToAgent yes
-    LogLevel VERBOSE
-    Match exec "bash -c '[[ $SSH_USER == 'nonifier' ]]'"
+    IdentitiesOnly yes
+    Match exec "bash -c '[[ $PWD =~ '-store\|dotfiles' ]]'"
     IdentityFile ~/.ssh/nonifier/id_rsa 
+    LogLevel INFO
 
 Host *
     AddKeysToAgent yes
+    IdentitiesOnly yes
     IdentityFile ~/.ssh/prophesee/id_ed25519 
-    LogLevel VERBOSE
+    LogLevel INFO
 
