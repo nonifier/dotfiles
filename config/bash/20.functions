@@ -1,5 +1,10 @@
 #! /bin/bash
 
+
+## Export all functions in this file so that sub-shell have access to them
+set -a 
+
+
 function ssh-start-agent() {
     eval `ssh-agent`
     empty -f ssh-add
@@ -103,3 +108,43 @@ function virtual_env_workon_or_create() {
     fi
 }
 
+function ip_addr() {
+    ip -j address show $1 | jq -er ".[].addr_info[].local"
+}
+
+function ip_if() {
+    ip -br -c link
+}
+
+function reset_if() {
+    sudo ip link set $1 down 
+    sudo ip link set $1 up
+}
+
+function ipv6_if_broadcast() {
+    ping -6 -N name -c1 -I $1 ip6-allnodes 
+}
+
+function ipv6_if_discover() {
+    [ -z $1 ] && (echo -e "Parameter <interface> missing.\n Usage : \n\t ipv6_if_discover <interface>"; exit 1)
+    ipv6_if_broadcast $1 2>/dev/null | grep 'bytes from' | cut -d\  -f4
+}
+
+function usb_if() { ip -j link | jq -r '.[].ifname | select(test("^enx"))'; }
+function usb_reset_if() { reset_if `usb_if`; }
+function usb_ip() { ip_addr `usb_if`; }
+function usb_discover() { ipv6_if_discover `usb_if`; }
+
+function wifi_if() { ip -j link | jq -r '.[].ifname | select(test("^wlp"))'; }
+function wifi_reset_if() { reset_if `wifi_if`; }
+function wifi_ip() { ip_addr `wifi_if`; }
+function wifi_discover() { ipv6_if_discover `wifi_if`; }
+
+function imx8mqthor96_ip() { usb_discover |& grep imx8 | cut -d\  -f4; }
+
+function watch_usb_if() {
+    watch -d -x bash -c 'usb_ip || (echo "reseting usb..."; usb_reset_if)'
+}
+
+
+set +a
