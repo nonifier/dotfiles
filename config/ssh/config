@@ -13,3 +13,9 @@ Host *
     IdentityFile ~/.ssh/prophesee/id_ed25519 
     LogLevel INFO
 
+Host imx8mqthor96
+    Hostname imx8mqthor96.local
+    User root
+    IdentityFile ~/.ssh/nonifier/id_rsa
+    LocalForward 1234 localhost:1234
+
