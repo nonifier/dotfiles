@@ -1,3 +1,7 @@
 __load_file_if_exists ~/.fzf.bash # FZF !
 
 PATH+=:/home/ogeorget/dev/github/fzf/bin
+
+__load_file_if_exists ~/dev/src/github/fzf-tab-completion/bash/fzf-bash-completion.sh
+bind -x '"\t": fzf_bash_completion'
+
