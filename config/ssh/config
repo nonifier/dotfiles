@@ -19,3 +19,7 @@ Host imx8mqthor96
     IdentityFile ~/.ssh/nonifier/id_rsa
     LocalForward 1234 localhost:1234
 
+Host project.prophesee.ai
+    Hostname projects.prophesee.ai
+    User ogeorget
+    IdentityFile ~/.ssh/prophesee/id_ed25519 
