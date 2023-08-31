@@ -14,9 +14,12 @@
       "MD007": false,
       "line-length": false
   },
+
+  "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/16.0.2/clangd_16.0.2/bin/clangd",
+
   "coc.preferences.extensionUpdateCheck": "daily",
   "python.pythonPath": "python3",
   "python.analysis.extraPaths": [
       "/home/ogeorget/dev/src/github/metavision/utils/python"
-  ]
+  ],
 }
