@@ -122,11 +122,19 @@ function reset_if() {
 }
 
 function ipv6_if_broadcast() {
+    # $1 an address or interface name
     ping -6 -N name -c1 -I $1 ip6-allnodes 
 }
 
 function ipv6_if_discover() {
-    [ -z $1 ] && (echo -e "Parameter <interface> missing.\n Usage : \n\t ipv6_if_discover <interface>"; exit 1)
+    [ -z $1 ] && (
+        echo -e " Parameter <interface> missing."
+        echo -e " Usage : \n\t ipv6_if_discover <interface>"
+        echo 
+        echo -e " # Choose from: "
+        ip -br link
+        exit 1
+    )
     ipv6_if_broadcast $1 2>/dev/null | grep 'bytes from' | cut -d\  -f4
 }
 

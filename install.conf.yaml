@@ -1,21 +1,21 @@
 - defaults:
     link:
-        create: true
-        relink: true
-        force: true
+      create: true
+      relink: true
+      force: true
 
-- clean: ['~']
+- clean: ["~"]
 
-- link: 
+- link:
     ~/.bashrc: config/bash/bashrc
     ~/.inputrc: config/inputrc
     ~/.config/alacritty: config/alacritty
     ~/.config/bash: config/bash
-    ~/.config/i3: config/i3
+    #~/.config/i3: config/i3
     ~/.config/nvim: config/nvim
-    ~/.config/polybar: config/polybar
-    ~/.config/rofi: config/rofi
-    ~/.config/wallpapers: config/wallpapers
+    #~/.config/polybar: config/polybar
+    #~/.config/rofi: config/rofi
+    #~/.config/wallpapers: config/wallpapers
     ~/.config/powerline-shell/config.json: config/powerline-shell/config.json
     ~/.gdbinit: config/gdbinit
     ~/.gitconfig: config/git/gitconfig
@@ -24,31 +24,37 @@
     ~/.ssh/config: config/ssh/config
 
 - shell:
-    - [ sudo snap install nvim --classic, Install NeoVim ]
-    - [ sudo snap install ripgrep --classic, Install RG ]
-    - [ sudo snap install curl --classic, Install Curl ]
-    - [ sudo snap install node --classic, Install NodeJS ]
-    - description: == Install nvim plug
-      command: |
-        mkdir -p $HOME/.local/share/nvim/site/autoload
-        [[ -f $HOME/.local/share/nvim/site/autoload/plug.vim ]] || curl -L "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $HOME/.local/share/nvim/site/autoload/plug.vim
-
+    - [sudo snap install nvim --classic, Install NeoVim]
+    - [sudo snap install ripgrep --classic, Install RG]
+    - [sudo snap install curl --classic, Install Curl]
+    - [sudo snap install node --classic, Install NodeJS]
     - description: == Configure APT repo
       command: |
         ## sudo add-apt-repository ppa:git-core/ppa
         ## sudo apt update
 
-    - description: == Install packagages
-      command: sudo apt install -y libssl-dev pass git gitsome git-lfs ssh httpie python3-pip python-is-python3 ca-certificates gnupg lsb-release
-        
+    - description: == Install packages
+      command: |
+        sudo apt install -y \
+          ca-certificates \
+          git \
+          git-lfs \
+          gnupg \
+          httpie \
+          libssl-dev \
+          lsb-release \
+          pass \
+          python-is-python3 \
+          python3-pip \
+          ssh
+
     - description: == Install Powerline
       stdout: true
       stderr: true
       command: |
         sudo apt install -y powerline-gitstatus python3-powerline fonts-powerline
         [[ -d /usr/src/powerline-shell ]] || sudo git clone https://github.com/b-ryan/powerline-shell /usr/src/powerline-shell
-        cd /usr/src/powerline-shell && sudo python setup.py install 
-
+        cd /usr/src/powerline-shell && sudo python setup.py install
 
     - description: == Install Docker
       command: |
@@ -67,13 +73,13 @@
       #- description: == Configure alternatives
       #command: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 900
       #&& sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 900 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-9
-      #- 
-      #command: 
+      #-
+      #command:
       #       sudo apt install -y i3 feh alacritty compton rofi
       #description: == Colour manager (ie. https://github.com/dylanaraps/pywal/wiki/Installation#table-of-contents)
       #
     - description: Password-store
-      command: | 
+      command: |
         [[ -d ~/.password-store/ ]] || git clone https://github.com/nonifier/password-store.git ~/.password-store/
 
     - description: Password-store host app for Firefox
@@ -93,4 +99,3 @@
       command: |
         [[ -f ~/.gnupg/woam@nonifier.com.priv ]] || echo "Please install ~/.gnupg/woam@nonifier.com.priv"
         [[ -f ~/.gnupg/woam@nonifier.com.priv ]] && gpg --import ~/.gnupg/woam@nonifier.com.priv && echo $(gpg --list-keys | rg -B1 woam@nonifier | head -1 | tr -d '[:space:]'):6: | gpg --import-ownertrust
-

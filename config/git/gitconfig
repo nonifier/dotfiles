@@ -6,46 +6,52 @@
 	default = simple
 
 [alias]
-	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
-	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
-	lnc = log --pretty=format:"%h\\ %s\\ [%cn]"
-	lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
-	ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
-	le = log --oneline --decorate
-	lg = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
-	lga = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
-	lga2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
-	lol = log --graph --decorate --pretty=oneline --abbrev-commit
-	lz = "!git log --decorate --no-color --oneline | fzf --multi --preview 'git show --color $(echo {}| cut -c -6)'"
+	br = branch 
+	ci = commit
+	cl = clone
+	co = checkout
+	cp = cherry-pick
+	dc = diff --cached --word-diff=color
+    df = diff --word-diff=color
+	diff = diff --word-diff
+	dlc = diff --cached HEAD^
+	dt = difftool -y
 	filelog = log -u
 	fl = log -u
-	dlc = diff --cached HEAD^
-	grep = grep -Ii
 	gr = grep -Ii
+	grep = grep -Ii
 	la = "!git config -l | grep alias | cut -c 7-"
-	cp = cherry-pick
+	ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+	lds = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+	le = log --oneline --decorate
+	lg = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+	lga = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+	lga2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+	lnc = log --pretty=format:"%h\\ %s\\ [%cn]"
+	lol = log --graph --decorate --pretty=oneline --abbrev-commit
+	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+	lz = "!git log --decorate --no-color --oneline | fzf --multi --preview 'git show --color $(echo {}| cut -c -6)'"
 	st = status
-	cl = clone
-	ci = commit
-	co = checkout
-	br = branch 
-	diff = diff --word-diff
-	df = diff
-	dc = diff --cached
-	dt = difftool -y
-    si = switch
     rs = restore
+    si = switch
 
 [color]
-	ui = always
-	status = always
+	ui = auto
+	status = auto
 	
 [core]
 	excludesfile = /home/ogeorget/.gitignore
 
+[status]
+    showStat = true
+    showUntrackedFiles = all
+    showStash = false
+    submoduleSummary = true
+
 [submodule]
-	recurse = false
+	recurse = true
 
 [filter "lfs"]
 	process = git-lfs filter-process
@@ -54,7 +60,7 @@
 	smudge = git-lfs smudge -- %f
 
 [pull]
-	rebase = false
+	rebase = true
 
 [difftool "nvimdiff"]
     cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
@@ -66,11 +72,18 @@
     prompt = true
 
 [diff]
+    algorithm = minimal
     tool = nvimdiff
 
 [merge]
 	tool = nvimdiff4
 
 [safe]
-	directory = /usr/src/powerline-shell/
 	directory = /usr/src/powerline-shell
+	directory = /home/ogeorget/dev/src/yocto/bld-xwayland-thor96/tmp/work/cortexa53-crypto-mx8m-poky-linux/metavision/2.3.1-r0/git
+	directory = /home/ogeorget/dev/src/yocto-hardknott-5.10.52/bld-xwayland-thor96/tmp/work/cortexa53-crypto-mx8m-poky-linux/metavision/4.3.0-r0/git
+	directory = /home/ogeorget/dev/src/yocto-poky2/build/tmp/work/cortexa57-poky-linux/metavision/4.3.0-r0/git
+	directory = /home/ogeorget/dev/src/yocto-hardknott-5.10.52/bld-xwayland-thor96/workspace/sources/metavision
+[maintenance]
+	repo = /home/ogeorget/dev/src/github/metavision
+	repo = /home/ogeorget/.password-store

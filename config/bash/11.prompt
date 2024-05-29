@@ -34,6 +34,8 @@ unset color_prompt force_color_prompt
 
 [[ -x `which powerline-shell` ]] || ( pip3 install powerline-shell && sudo apt install fonts-powerline )
 function _update_ps1() {
+    stty sane 
+
     EXIT_STATUS=$?
     if command -v powerline-shell 1>/dev/null; then
         PS1=$(powerline-shell $EXIT_STATUS)

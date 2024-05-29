@@ -1,0 +1,6 @@
+
+bind '"\C-a\C-f": dump-functions'
+bind '"\C-a\C-v": dump-variables'
+bind '"\C-a\C-m": dump-macros'
+bind '"\C-l": "|& less -r\n"'
+bind '"\C-a\C-a": "stty sane \n"'
