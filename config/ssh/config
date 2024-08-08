@@ -3,7 +3,7 @@ Host github.com
     User git
     AddKeysToAgent yes
     IdentitiesOnly yes
-    Match exec "bash -c '[[ $PWD =~ '-store\|dotfiles' ]]'"
+    Match exec "bash -c '[[ $PWD =~ password-store|dotfiles ]]'"
     IdentityFile ~/.ssh/nonifier/id_rsa 
     LogLevel INFO
 
