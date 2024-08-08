@@ -22,6 +22,8 @@
     ~/.gitignore: config/git/gitignore
     ~/.pdbrc.py: config/pdbrc.py
     ~/.ssh/config: config/ssh/config
+    ~/.local/bin/pass-4-ssh.sh: config/ssh-add-pass/pass-4-ssh.sh
+    ~/.local/bin/ssh-add-4-pass: config/ssh-add-pass/ssh-add-4-pass
 
 - shell:
     - [sudo snap install nvim --classic, Install NeoVim]

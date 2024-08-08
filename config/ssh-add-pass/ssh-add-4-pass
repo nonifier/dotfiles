@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Helper script to invoke ssh-add with pass-ssh-askpass.sh
+
+askpass=$(which pass-4-ssh.sh)
+SSH_ASKPASS="$askpass" SSH_ASKPASS_REQUIRE=force ssh-add "$@" </dev/null
