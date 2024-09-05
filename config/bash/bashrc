@@ -47,3 +47,4 @@ function __load_bash_files_from_dir() {
 __load_bash_files_from_dir "$HOME/.config/bash/*" 
 
 
+. "$HOME/.cargo/env"
