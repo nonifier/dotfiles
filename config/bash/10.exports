@@ -36,8 +36,11 @@ PATH+=:/snap/bin
 export GOPATH=$HOME/go
 PATH+=:/usr/local/go/bin:$GOPATH/bin
 
-# Rust 
+# Rust
 PATH+=:$HOME/.cargo/bin
 
 # Pass
-export PASSWORD_STORE_GENERATED_LENGTH=64 
+export PASSWORD_STORE_GENERATED_LENGTH=64
+
+# Nvim as EDITOR
+export EDITOR=nvim

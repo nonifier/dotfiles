@@ -3,17 +3,17 @@
 #
 #   VirtualEnvWrapper
 #
-__virtualEnvWrapper() {
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-    export WORKON_HOME=$HOME/.virtualenvs
-    export PROJECT_HOME=$HOME/Devel
-    source $HOME/.local/bin/virtualenvwrapper.sh
-}
-
-if [ -f $HOME/.local/bin/virtualenvwrapper.sh ];then
-    __virtualEnvWrapper
-else
-    pip install --user virtualenvwrapper
-    __virtualEnvWrapper
-fi
-
+#__virtualEnvWrapper() {
+#    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+#    export WORKON_HOME=$HOME/.virtualenvs
+#    export PROJECT_HOME=$HOME/Devel
+#    source $HOME/.local/bin/virtualenvwrapper.sh
+#}
+#
+#if [ -f $HOME/.local/bin/virtualenvwrapper.sh ];then
+#    __virtualEnvWrapper
+#else
+#    pip install --user virtualenvwrapper
+#    __virtualEnvWrapper
+#fi
+#

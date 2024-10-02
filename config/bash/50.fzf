@@ -1,6 +1,10 @@
-__load_file_if_exists ~/.fzf.bash # FZF !
 
 PATH+=:/home/ogeorget/dev/github/fzf/bin
+
+__load_file_if_exists /usr/share/doc/fzf/examples/key-bindings.bash
+
+[[ -f ~/dev/src/github/fzf-tab-completion/bash/fzf-bash-completion.sh ]] ||
+  git clone https://github.com/lincheney/fzf-tab-completion.git ~/dev/src/github/fzf-tab-completion
 
 __load_file_if_exists ~/dev/src/github/fzf-tab-completion/bash/fzf-bash-completion.sh
 bind -x '"\t": fzf_bash_completion'

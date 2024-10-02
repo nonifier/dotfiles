@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 export PYTHONPATH=/home/ogeorget/dev/src/github/metavision/utils/python:$PYTHONPATH
 export PYTHONPATH=/home/ogeorget/dev/src/github/metavision/utils/ci:$PYTHONPATH
 
