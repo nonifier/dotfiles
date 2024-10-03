@@ -55,6 +55,8 @@
           python3-full \
           ssh \
           wget \
+        && pipx install \
+          awscli \
 
     - description: == Install Dev packages ==
       command: |

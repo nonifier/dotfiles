@@ -3,7 +3,6 @@
 # sources /etc/bash.bashrc).
 __load_file_if_exists /etc/bash_completion
 
-
 # Github - GH
 _gh_completion() {
     COMPREPLY=( $( env COMP_WORDS="${COMP_WORDS[*]}" \
@@ -13,3 +12,5 @@ _gh_completion() {
 }
 
 complete -F _gh_completion -o default gh;
+
+complete -C `which aws_completer` aws
