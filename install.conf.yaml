@@ -29,6 +29,7 @@
     - [sudo snap install nvim --classic, Install NeoVim]
     - [sudo snap install ripgrep --classic, Install RG]
     - [sudo snap install slack, Install Slack]
+    - [sudo snap install spotify, Install Spotify]
     - description: == Configure APT repo
       command: |
         ## sudo add-apt-repository ppa:git-core/ppa
