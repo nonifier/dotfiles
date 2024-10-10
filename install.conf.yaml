@@ -52,6 +52,7 @@
           awscli \
 
     - description: == Install Dev packages ==
+      stdout: true
       command: |
         sudo apt install -y \
           apt-utils \
@@ -95,55 +96,73 @@
           unzip \
 
     - description: == Configure FD ==
+      stdcout: true
       command: |
         [[ -h ~/.local/bin/fd ]] || 
           ln -s $(which fdfind) ~/.local/bin/fd
 
     - description: == Install Nerd Fonts ==
+      stdcout: true
       command: |
-        mkdir -p ~/.fonts
         [[ -f ~/.fonts/JetBrainsMonoNLNerdFontMono-Regular.ttf ]] ||
         ( 
+          mkdir -p ~/.fonts
           wget -qO- "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz" | tar xvJ -C ~/.fonts/
           fc-cache -fv ~/.fonts
         )
 
     - description: == Install LaziGit ==
+      stdcout: true
       command: |
-        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-        mkdir -p ~/.local/share/lazygit
-        wget -qO- "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" | tar xvz -C ~/.local/share/lazygit
-        ( cd ~; install ~/.local/share/lazygit/lazygit ~/.local/bin/ )
+        [[ -f ~/.local/bin/lazygit ]] || (
+          LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+          mkdir -p ~/.local/share/lazygit
+          wget -qO- "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" | tar xvz -C ~/.local/share/lazygit
+          ( cd ~; install ~/.local/share/lazygit/lazygit ~/.local/bin/ )
+        )
 
     - description: == Install Powerline
+      stdcout: true
       command: |
         sudo apt install -y powerline-gitstatus python3-powerline fonts-powerline
-        [[ -d /usr/src/powerline-shell ]] || sudo git clone https://github.com/b-ryan/powerline-shell /usr/src/powerline-shell
-        cd /usr/src/powerline-shell && sudo python setup.py install
+        [[ -d /usr/src/powerline-shell ]] || (
+          sudo git clone https://github.com/b-ryan/powerline-shell /usr/src/powerline-shell
+          cd /usr/src/powerline-shell && sudo python setup.py install
+        )
 
     - description: == Install Docker
+      stdcout: true
       command: |
-        sudo mkdir -m 0755 -p /etc/apt/keyrings
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
         if [[ ! -f /etc/apt/sources.list.d/docker.list ]]; then \
+          sudo mkdir -m 0755 -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
           echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
             $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
           sudo apt update
+          sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+          sudo groupadd docker
+          sudo usermod -aG docker $USER
+          newgrp docker
         fi
-        sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-        sudo groupadd docker
-        sudo usermod -aG docker $USER
-        newgrp docker
 
     - description: Password-store
+      stdcout: true
       command: |
         [[ -d ~/.password-store/ ]] || git clone git@github.com:nonifier/password-store.git ~/.password-store/
 
     - description: Password-store host app for Firefox
+      stdcout: true
       command: |
         [[ -f ~/.mozilla/native-messaging-hosts/passff.py ]] || (curl -sSL github.com/passff/passff-host/releases/latest/download/install_host_app.sh | bash -s -- firefox)
 
+    - description: Trust Key
+      stdcout: true
+      command: |
+        [[ -f ~/.gnupg/woam@nonifier.com.priv ]] || echo "Please install ~/.gnupg/woam@nonifier.com.priv"
+        [[ -f ~/.gnupg/woam@nonifier.com.priv ]] && gpg --import ~/.gnupg/woam@nonifier.com.priv && echo $(gpg --list-keys | rg -B1 woam@nonifier | head -1 | tr -d '[:space:]'):6: | gpg --import-ownertrust
+
     - description: SSH Setup
+      stdcout: true
       command: |
         mkdir -p ~/.ssh/{nonifier,prophesee} # Creating SSH folders 
         chmod 0700 ~/.ssh/{nonifier,prophesee} # Setting permissions
@@ -151,8 +170,4 @@
         [[ -f ~/.ssh/nonifier/id_rsa.pub ]] || pass ssh/id_rsa.pub > ~/.ssh/nonifier/id_rsa.pub
         [[ -f ~/.ssh/prophesee/id_ed25519 ]] || pass prophesee/ssh/id_ed25519.priv > ~/.ssh/prophesee/id_ed25519; chmod 600 ~/.ssh/prophesee/id_ed25519
         [[ -f ~/.ssh/prophesee/id_ed25519.pub ]] || pass prophesee/ssh/id_ed25519.pub > ~/.ssh/prophesee/id_ed25519.pub
-
-    - description: Trust Key
-      command: |
-        [[ -f ~/.gnupg/woam@nonifier.com.priv ]] || echo "Please install ~/.gnupg/woam@nonifier.com.priv"
-        [[ -f ~/.gnupg/woam@nonifier.com.priv ]] && gpg --import ~/.gnupg/woam@nonifier.com.priv && echo $(gpg --list-keys | rg -B1 woam@nonifier | head -1 | tr -d '[:space:]'):6: | gpg --import-ownertrust
+        [[ -f ~/openvpn.config ]] || pass prophesee/vpn/openvpn.config > ~/openvpn.config
