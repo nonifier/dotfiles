@@ -27,7 +27,6 @@
 
 - shell:
     - [sudo snap install nvim --classic, Install NeoVim]
-    - [sudo snap install ripgrep --classic, Install RG]
     - [sudo snap install slack, Install Slack]
     - [sudo snap install spotify, Install Spotify]
     - description: == Configure APT repo
@@ -36,11 +35,11 @@
         ## sudo apt update
 
     - description: == Install packages
+      stdout: true
       command: |
         sudo apt install -y \
           ca-certificates \
           curl \
-          fd-find \
           fzf \
           git \
           git-lfs \
@@ -54,6 +53,7 @@
           plocate \
           python-is-python3 \
           python3-full \
+          ripgrep \
           ssh \
           wget \
         && pipx install \
@@ -102,10 +102,15 @@
           software-properties-common \
           unzip \
 
+    - description: == Configure FD ==
+      command: |
+        [[ -h ~/.local/bin/fd ]] || 
+          ln -s $(which fdfind) ~/.local/bin/fd
+
     - description: == Install Nerd Fonts ==
       command: |
         mkdir -p ~/.fonts
-        [[ -f ~/.fonts/JetBrainsMonoNLNerdFontMono-Regular.ttf ]] || \
+        [[ -f ~/.fonts/JetBrainsMonoNLNerdFontMono-Regular.ttf ]] ||
         ( 
           wget -qO- "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz" | tar xvJ -C ~/.fonts/
           fc-cache -fv ~/.fonts
@@ -118,14 +123,7 @@
         wget -qO- "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" | tar xvz -C ~/.local/share/lazygit
         ( cd ~; install ~/.local/share/lazygit/lazygit ~/.local/bin/ )
 
-    #- description: == Install nvim plug
-    #command: |
-    #mkdir -p $HOME/.local/share/nvim/site/autoload
-    #[[ -f $HOME/.local/share/nvim/site/autoload/plug.vim ]] || curl -L "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $HOME/.local/share/nvim/site/autoload/plug.vim
-
     - description: == Install Powerline
-      stdout: true
-      stderr: true
       command: |
         sudo apt install -y powerline-gitstatus python3-powerline fonts-powerline
         [[ -d /usr/src/powerline-shell ]] || sudo git clone https://github.com/b-ryan/powerline-shell /usr/src/powerline-shell
@@ -145,14 +143,6 @@
         sudo usermod -aG docker $USER
         newgrp docker
 
-      #- description: == Configure alternatives
-      #command: sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-9 900
-      #&& sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 900 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-9
-      #-
-      #command:
-      #       sudo apt install -y i3 feh alacritty compton rofi
-      #description: == Colour manager (ie. https://github.com/dylanaraps/pywal/wiki/Installation#table-of-contents)
-      #
     - description: Password-store
       command: |
         [[ -d ~/.password-store/ ]] || git clone git@github.com:nonifier/password-store.git ~/.password-store/
