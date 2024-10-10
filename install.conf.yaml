@@ -11,11 +11,7 @@
     ~/.inputrc: config/inputrc
     ~/.config/alacritty: config/alacritty
     ~/.config/bash: config/bash
-    #~/.config/i3: config/i3
     ~/.config/nvim: config/nvim
-    #~/.config/polybar: config/polybar
-    #~/.config/rofi: config/rofi
-    #~/.config/wallpapers: config/wallpapers
     ~/.config/powerline-shell/config.json: config/powerline-shell/config.json
     ~/.gdbinit: config/gdbinit
     ~/.gitconfig: config/git/gitconfig
@@ -29,10 +25,6 @@
     - [sudo snap install nvim --classic, Install NeoVim]
     - [sudo snap install slack, Install Slack]
     - [sudo snap install spotify, Install Spotify]
-    - description: == Configure APT repo
-      command: |
-        ## sudo add-apt-repository ppa:git-core/ppa
-        ## sudo apt update
 
     - description: == Install packages
       stdout: true
