@@ -47,6 +47,7 @@
           python3-full \
           ripgrep \
           ssh \
+          webext-browserpass \
           wget \
         && pipx install \
           awscli \
