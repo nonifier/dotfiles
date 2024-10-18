@@ -24,23 +24,23 @@ shopt -s cmdhist      # If set, bash attempts to save all lines of a multiple-li
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
-  debian_chroot=$(cat /etc/debian_chroot)
+    debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # load gpg key
 gpg --list-keys Nonifier >/dev/null || gpg --import ~/.gnupg/woam@nonifier.com.priv
 
 function __load_file_if_exists() {
-  if [[ -f "$1" ]]; then
-    source "$1"
-  fi
+    if [[ -f "$1" ]]; then
+        source "$1"
+    fi
 }
 
 # Load all files under the .config/bash/ directory
 function __load_bash_files_from_dir() {
-  for f in $1; do
-    [[ ${f##*/} != "bashrc" ]] && source "$f"
-  done
+    for f in $1; do
+        [[ ${f##*/} != "bashrc" ]] && source "$f"
+    done
 }
 
 # Custom bash configuration

@@ -32,13 +32,6 @@ PATH+=:/usr/games
 PATH+=:/usr/local/games
 PATH+=:/snap/bin
 
-# GO lang
-export GOPATH=$HOME/go
-PATH+=:/usr/local/go/bin:$GOPATH/bin
-
-# Rust
-PATH+=:$HOME/.cargo/bin
-
 # Pass
 export PASSWORD_STORE_GENERATED_LENGTH=64
 
