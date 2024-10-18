@@ -94,6 +94,7 @@
           python3-pip \
           python3-venv \
           python3-pytest \
+          python3-pynvim \
           software-properties-common \
           unzip \
 
