@@ -45,3 +45,7 @@ function __load_bash_files_from_dir() {
 
 # Custom bash configuration
 __load_bash_files_from_dir "$HOME/.config/bash/*"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
