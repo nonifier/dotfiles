@@ -62,6 +62,9 @@
 [pull]
 	rebase = true
 
+[rebase]
+    updateRefs = true
+
 [difftool "nvimdiff"]
     cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 
@@ -84,6 +87,7 @@
 	directory = /home/ogeorget/dev/src/yocto-hardknott-5.10.52/bld-xwayland-thor96/tmp/work/cortexa53-crypto-mx8m-poky-linux/metavision/4.3.0-r0/git
 	directory = /home/ogeorget/dev/src/yocto-poky2/build/tmp/work/cortexa57-poky-linux/metavision/4.3.0-r0/git
 	directory = /home/ogeorget/dev/src/yocto-hardknott-5.10.52/bld-xwayland-thor96/workspace/sources/metavision
+
 [maintenance]
 	repo = /home/ogeorget/dev/src/github/metavision
 	repo = /home/ogeorget/.password-store
