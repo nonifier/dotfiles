@@ -22,7 +22,6 @@
     ~/.local/bin/ssh-add-4-pass: config/ssh-add-pass/ssh-add-4-pass
 
 - shell:
-    - [sudo snap install nvim --classic, Install NeoVim]
     - [sudo snap install slack, Install Slack]
     - [sudo snap install spotify, Install Spotify]
 
@@ -63,7 +62,6 @@
           clang clang-tidy clang-format \
           cmake \
           cmake-curses-gui \
-          curl \
           doxygen \
           direnv \
           ffmpeg \
@@ -115,6 +113,12 @@
           fc-cache -fv ~/.fonts
         )
 
+    - description: == Install NVim ==
+      stdcout: true
+      command: |
+        curl -# -L --output "$HOME/.local/opt/nvim.appimage" https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+        /usr/bin/install --mode=u+x -t $HOME/.local/bin/ $HOME/.local/opt/nvim.appimage
+    
     - description: == Install LaziGit ==
       stdcout: true
       command: |
