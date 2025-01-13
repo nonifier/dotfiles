@@ -65,6 +65,7 @@
           cmake-curses-gui \
           curl \
           doxygen \
+          direnv \
           ffmpeg \
           flex \
           graphviz \
