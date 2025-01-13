@@ -37,8 +37,3 @@ export PASSWORD_STORE_GENERATED_LENGTH=64
 
 # Nvim as EDITOR
 export EDITOR=nvim
-
-
-# Cmake Export Compile Commands 
-export CMAKE_EXPORT_COMPILE_COMMANDS=True
-export CMAKE_GENERATOR='Ninja'
