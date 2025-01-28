@@ -11,8 +11,6 @@ HISTFILESIZE=8000
 HISTCONTROL=ignoreboth:erasedups
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r" # After each command, append to the history file and reread it
 
-EDITOR=$(which nvim)
-
 shopt -s autocd       # a directory is executed as if it were the argument to the cd command.
 shopt -s checkwinsize # check and update the values of LINES and COLUMNS.
 shopt -s globstar     # If set, the pattern "**" used in a pathname expansion context will match all files and zero or more directories and subdirectories.
@@ -45,7 +43,3 @@ function __load_bash_files_from_dir() {
 
 # Custom bash configuration
 __load_bash_files_from_dir "$HOME/.config/bash/*"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
