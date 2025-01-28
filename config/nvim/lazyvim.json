@@ -10,6 +10,7 @@
     "lazyvim.plugins.extras.lang.yaml"
   ],
   "extras": [
+    "lazyvim.plugins.extras.ai.copilot",
     "lazyvim.plugins.extras.coding.mini-surround"
   ],
   "news": {
