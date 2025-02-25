@@ -32,6 +32,7 @@
         sudo apt install -y \
           ca-certificates \
           curl \
+          fd-find \
           fzf \
           git \
           git-lfs \
@@ -98,12 +99,6 @@
           python3-pynvim \
           software-properties-common \
           unzip \
-
-    - description: == Configure FD ==
-      stdcout: true
-      command: |
-        [[ -h ~/.local/bin/fd ]] || 
-          ln -s $(which fdfind) ~/.local/bin/fd
 
     - description: == Install Nerd Fonts ==
       stdout: true
