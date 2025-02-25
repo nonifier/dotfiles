@@ -12,6 +12,7 @@
     ~/.config/alacritty: confie/alacritty
     ~/.config/bash: config/bash
     ~/.config/nvim: config/nvim
+    ~/.config/lazygit: config/lazygit
     ~/.config/powerline-shell/config.json: config/powerline-shell/config.json
     ~/.gdbinit: config/gdbinit
     ~/.gitconfig: config/git/gitconfig
