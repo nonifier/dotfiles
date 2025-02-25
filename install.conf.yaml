@@ -9,7 +9,7 @@
 - link:
     ~/.bashrc: config/bash/bashrc
     ~/.inputrc: config/inputrc
-    ~/.config/alacritty: confie/alacritty
+    ~/.config/alacritty: config/alacritty
     ~/.config/bash: config/bash
     ~/.config/nvim: config/nvim
     ~/.config/lazygit: config/lazygit
@@ -106,23 +106,23 @@
           ln -s $(which fdfind) ~/.local/bin/fd
 
     - description: == Install Nerd Fonts ==
-      stdcout: true
+      stdout: true
       command: |
         [[ -f ~/.fonts/JetBrainsMonoNLNerdFontMono-Regular.ttf ]] ||
-        ( 
+        (
           mkdir -p ~/.fonts
           wget -qO- "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz" | tar xvJ -C ~/.fonts/
           fc-cache -fv ~/.fonts
         )
 
     - description: == Install NVim ==
-      stdcout: true
+      stdout: true
       command: |
-        curl -# -L --output "$HOME/.local/opt/nvim.appimage" https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-        /usr/bin/install --mode=u+x -t $HOME/.local/bin/ $HOME/.local/opt/nvim.appimage
-    
+        curl -# -L --output "$HOME/.local/bin/nvim.appimage" https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+        chmod u+x "$HOME/.local/bin/nvim.appimage"
+
     - description: == Install LaziGit ==
-      stdcout: true
+      stdout: true
       command: |
         [[ -f ~/.local/bin/lazygit ]] || (
           LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
@@ -132,7 +132,7 @@
         )
 
     - description: == Install Powerline
-      stdcout: true
+      stdout: true
       command: |
         sudo apt install -y powerline-gitstatus python3-powerline fonts-powerline
         [[ -d /usr/src/powerline-shell ]] || (
@@ -141,7 +141,7 @@
         )
 
     - description: == Install Docker
-      stdcout: true
+      stdout: true
       command: |
         if [[ ! -f /etc/apt/sources.list.d/docker.list ]]; then \
           sudo mkdir -m 0755 -p /etc/apt/keyrings
@@ -156,23 +156,23 @@
         fi
 
     - description: Password-store
-      stdcout: true
+      stdout: true
       command: |
         [[ -d ~/.password-store/ ]] || git clone git@github.com:nonifier/password-store.git ~/.password-store/
 
     - description: Password-store host app for Firefox
-      stdcout: true
+      stdout: true
       command: |
         [[ -f ~/.mozilla/native-messaging-hosts/passff.py ]] || (curl -sSL github.com/passff/passff-host/releases/latest/download/install_host_app.sh | bash -s -- firefox)
 
     - description: Trust Key
-      stdcout: true
+      stdout: true
       command: |
         [[ -f ~/.gnupg/woam@nonifier.com.priv ]] || echo "Please install ~/.gnupg/woam@nonifier.com.priv"
         [[ -f ~/.gnupg/woam@nonifier.com.priv ]] && gpg --import ~/.gnupg/woam@nonifier.com.priv && echo $(gpg --list-keys | rg -B1 woam@nonifier | head -1 | tr -d '[:space:]'):6: | gpg --import-ownertrust
 
     - description: SSH Setup
-      stdcout: true
+      stdout: true
       command: |
         mkdir -p ~/.ssh/{nonifier,prophesee} # Creating SSH folders 
         chmod 0700 ~/.ssh/{nonifier,prophesee} # Setting permissions
