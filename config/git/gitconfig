@@ -91,3 +91,5 @@
 [maintenance]
 	repo = /home/ogeorget/dev/src/github/metavision
 	repo = /home/ogeorget/.password-store
+[init]
+	defaultBranch = main
