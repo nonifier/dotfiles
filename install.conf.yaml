@@ -61,6 +61,7 @@
           bison \
           build-essential \
           cargo \
+          chafa \
           clang clang-tidy clang-format \
           cmake \
           cmake-curses-gui \
