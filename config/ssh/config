@@ -1,48 +1,6 @@
-# Nonifier github
-Host github.com
-    User git
-    AddKeysToAgent yes
-    IdentitiesOnly yes
-    Match exec "bash -c '[[ $PWD =~ password-store|dotfiles ]]'"
-    IdentityFile ~/.ssh/nonifier/id_rsa 
-    LogLevel INFO
-
 Host *
     AddKeysToAgent yes
     IdentitiesOnly yes
-    IdentityFile ~/.ssh/prophesee/id_ed25519 
+    IdentityFile ~/.ssh/nonifier/id_rsa
     LogLevel INFO
 
-Host imx8mqthor96
-    Hostname imx8mqthor96.local
-    User root
-    IdentityFile ~/.ssh/nonifier/id_rsa
-    LocalForward 1234 localhost:1234
-
-Host project.prophesee.ai
-    Hostname projects.prophesee.ai
-    User ogeorget
-    IdentityFile ~/.ssh/prophesee/id_ed25519 
-
-Host kria
-    Hostname 192.168.1.142
-    #Hostname 192.168.20.10
-    #Hostname 10.14.76.217
-    IdentityFile ~/.ssh/prophesee/id_ed25519 
-    User root
-    LocalForward 1234 localhost:1234
-
-Host tars
-    Hostname 10.114.2.32 
-    IdentityFile ~/.ssh/prophesee/id_ed25519 
-    User ogeorget
-
-Host jarvis
-    Hostname 10.114.2.31
-    IdentityFile ~/.ssh/prophesee/id_ed25519 
-    User ogeorget
-
-Host tars.system.u20
-    Hostname 10.114.2.65
-    IdentityFile ~/.ssh/prophesee/id_ed25519 
-    User ogeorget
