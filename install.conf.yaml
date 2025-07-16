@@ -33,7 +33,6 @@
           ca-certificates \
           curl \
           fd-find \
-          fzf \
           git \
           git-lfs \
           gnupg \
@@ -69,6 +68,7 @@
           direnv \
           ffmpeg \
           flex \
+          golang \
           graphviz \
           hdf5-tools \
           libboost-all-dev \
@@ -134,6 +134,13 @@
           sudo git clone https://github.com/b-ryan/powerline-shell /usr/src/powerline-shell
           cd /usr/src/powerline-shell && sudo python setup.py install
         )
+
+    - description: == Install FZF
+      stdout: true
+      command: |
+        [[ -f ~/dev/src/github/fzf ]] || git clone --branch v0.64.0 https://github.com/junegunn/fzf.git ~/dev/src/github/fzf
+        [[ -f ~/dev/src/github/fzf/bin/fzf ]] || make -C ~/dev/src/github/fzf install
+        command -v fzf || (cd ~/dev/src/github/fzf && ./install --key-bindings --completion --no-update-rc)
 
     - description: == Install Docker
       stdout: true

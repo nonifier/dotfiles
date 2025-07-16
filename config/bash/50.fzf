@@ -1,11 +1,15 @@
 
-PATH+=:/home/ogeorget/dev/github/fzf/bin
+# Setup fzf
+# ---------
+if [[ ! "$PATH" == */home/nonif/dev/src/github/fzf/bin* ]]; then
+  PATH="${PATH:+${PATH}:}/home/nonif/dev/src/github/fzf/bin"
+fi
 
-__load_file_if_exists /usr/share/doc/fzf/examples/key-bindings.bash
+eval "$(fzf --bash)"
 
+# FZF as bash completion engine
 [[ -f ~/dev/src/github/fzf-tab-completion/bash/fzf-bash-completion.sh ]] ||
   git clone https://github.com/lincheney/fzf-tab-completion.git ~/dev/src/github/fzf-tab-completion
-
 __load_file_if_exists ~/dev/src/github/fzf-tab-completion/bash/fzf-bash-completion.sh
 bind -x '"\t": fzf_bash_completion'
 
