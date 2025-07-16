@@ -16,4 +16,9 @@ return {
 		},
 	},
 	{ "Civitasv/cmake-tools.nvim", enable = false },
+    {
+        "gennaro-tedesco/nvim-jqx",
+        event = {"BufReadPost"},
+        ft = { "json", "yaml" },
+    },
 }
