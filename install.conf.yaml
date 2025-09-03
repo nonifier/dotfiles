@@ -25,6 +25,7 @@
 - shell:
     - [sudo snap install slack, Install Slack]
     - [sudo snap install spotify, Install Spotify]
+    - [sudo snap install aws-cli --classic, Install AWS-cli]
 
     - description: == Install packages
       stdout: true
@@ -49,8 +50,6 @@
           ssh \
           webext-browserpass \
           wget \
-        && pipx install \
-          awscli \
 
     - description: == Install Dev packages ==
       stdout: true
