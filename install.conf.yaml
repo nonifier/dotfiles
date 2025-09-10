@@ -23,12 +23,9 @@
     ~/.local/bin/ssh-add-4-pass: config/ssh-add-pass/ssh-add-4-pass
 
 - shell:
-    - [sudo snap install slack, Install Slack]
-    - [sudo snap install spotify, Install Spotify]
-    - [sudo snap install aws-cli --classic, Install AWS-cli]
-
     - description: == Install packages
       stdout: true
+      stderr: true
       command: |
         sudo apt install -y \
           ca-certificates \
@@ -53,13 +50,13 @@
 
     - description: == Install Dev packages ==
       stdout: true
+      stderr: true
       command: |
         sudo apt install -y \
           apt-utils \
           alacritty \
           bison \
           build-essential \
-          cargo \
           chafa \
           clang clang-tidy clang-format \
           cmake \
@@ -100,6 +97,13 @@
           software-properties-common \
           unzip \
 
+    - [sudo snap install spotify, Install Spotify]
+    - [sudo snap install aws-cli --classic, Install AWS-cli]
+    - [
+        sh <(curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf) -y --no-modify-path,
+        Install Rust,
+      ]
+
     - description: == Install Nerd Fonts ==
       stdout: true
       command: |
@@ -128,6 +132,7 @@
 
     - description: == Install Powerline
       stdout: true
+      stderr: true
       command: |
         sudo apt install -y powerline-gitstatus python3-powerline fonts-powerline
         [[ -d /usr/src/powerline-shell ]] || (
@@ -144,6 +149,7 @@
 
     - description: == Install Docker
       stdout: true
+      stderr: true
       command: |
         if [[ ! -f /etc/apt/sources.list.d/docker.list ]]; then \
           sudo mkdir -m 0755 -p /etc/apt/keyrings
@@ -180,7 +186,7 @@
     - description: SSH Setup
       stdout: true
       command: |
-        mkdir -p ~/.ssh/{nonifier,prophesee} # Creating SSH folders 
+        mkdir -p ~/.ssh/{nonifier,prophesee} # Creating SSH folders
         chmod 0700 ~/.ssh/{nonifier,prophesee} # Setting permissions
         [[ -f ~/.ssh/nonifier/id_rsa ]] || (pass ssh/id_rsa.priv > ~/.ssh/nonifier/id_rsa && chmod 600 ~/.ssh/nonifier/id_rsa)
         [[ -f ~/.ssh/nonifier/id_rsa.pub ]] || pass ssh/id_rsa.pub > ~/.ssh/nonifier/id_rsa.pub
