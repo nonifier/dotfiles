@@ -187,3 +187,11 @@
         [[ -f ~/.ssh/prophesee/id_ed25519 ]] || (pass prophesee/ssh/id_ed25519.priv > ~/.ssh/prophesee/id_ed25519 && chmod 600 ~/.ssh/prophesee/id_ed25519)
         [[ -f ~/.ssh/prophesee/id_ed25519.pub ]] || pass prophesee/ssh/id_ed25519.pub > ~/.ssh/prophesee/id_ed25519.pub
         [[ -f ~/openvpn.config ]] || pass prophesee/vpn/openvpn.config > ~/openvpn.config
+
+    - description: Slack
+      stdout: true
+      stderr: true
+      command: |
+        curl --fail --silent --show-error --location "https://downloads.slack-edge.com/desktop-releases/linux/x64/4.45.69/slack-desktop-4.45.69-amd64.deb" > /tmp/slack.deb
+        sudo apt install -y /tmp/slack.deb
+        rm /tmp/slack.deb
