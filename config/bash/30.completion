@@ -13,4 +13,4 @@ _gh_completion() {
 
 complete -F _gh_completion -o default gh;
 
-complete -C `which aws_completer` aws
+[[ -x `which uv` ]] && eval "$(uv generate-shell-completion bash)"

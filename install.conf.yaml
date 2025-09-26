@@ -104,6 +104,10 @@
       command: |
         [[ -x `which rustup` ]] || sh <(curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf) -y --no-modify-path
 
+    - description: == Install UV for Python ==
+      command: |
+        [[ -x `which uv` ]] || curl -LsSf https://astral.sh/uv/install.sh | sh
+
     - description: == Install Nerd Fonts ==
       stdout: true
       command: |
