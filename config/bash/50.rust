@@ -1,6 +1,5 @@
 #! /bin/env bash
 
 # Rust
-PATH+=:$HOME/.cargo/bin
+PATH=$HOME/.cargo/bin:$PATH
 source "$HOME/.cargo/env"
-

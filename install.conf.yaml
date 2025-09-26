@@ -99,10 +99,10 @@
 
     - [sudo snap install spotify, Install Spotify]
     - [sudo snap install aws-cli --classic, Install AWS-cli]
-    - [
-        sh <(curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf) -y --no-modify-path,
-        Install Rust,
-      ]
+    - description: == Install Rust Toolchain ==
+      stdout: true
+      command: |
+        [[ -x `which rustup` ]] || sh <(curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf) -y --no-modify-path
 
     - description: == Install Nerd Fonts ==
       stdout: true
