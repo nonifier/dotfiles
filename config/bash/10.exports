@@ -31,6 +31,7 @@ PATH+=:/bin
 PATH+=:/usr/games
 PATH+=:/usr/local/games
 PATH+=:/snap/bin
+PATH+=:~/node_modules/.bin
 
 # Pass
 export PASSWORD_STORE_GENERATED_LENGTH=64

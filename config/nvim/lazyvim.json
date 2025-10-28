@@ -11,6 +11,7 @@
     "lazyvim.plugins.extras.lang.rust"
   ],
   "extras": [
+    "lazyvim.plugins.extras.ai.claudecode",
     "lazyvim.plugins.extras.ai.copilot",
     "lazyvim.plugins.extras.coding.mini-surround",
     "lazyvim.plugins.extras.lang.rust",
