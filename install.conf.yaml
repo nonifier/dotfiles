@@ -1,3 +1,12 @@
+# ============================================================================
+# Dotfiles Installation Configuration
+# ============================================================================
+# Automated setup for development environment using Dotbot
+# Run with: ./install
+
+# ============================================================================
+# CONFIGURATION DEFAULTS
+# ============================================================================
 - defaults:
     link:
       create: true
@@ -7,23 +16,35 @@
 - clean: ["~"]
 
 - link:
+    # Shell configuration
     ~/.bashrc: config/bash/bashrc
     ~/.inputrc: config/inputrc
-    ~/.config/alacritty: config/alacritty
     ~/.config/bash: config/bash
+
+    # Terminal and editor
+    ~/.config/alacritty: config/alacritty
     ~/.config/nvim: config/nvim
-    ~/.config/lazygit: config/lazygit
     ~/.config/powerline-shell/config.json: config/powerline-shell/config.json
+
+    # Development tools
     ~/.gdbinit: config/gdbinit
+    ~/.pdbrc.py: config/pdbrc.py
+    ~/.config/lazygit: config/lazygit
+
+    # Git configuration
     ~/.gitconfig: config/git/gitconfig
     ~/.gitignore: config/git/gitignore
-    ~/.pdbrc.py: config/pdbrc.py
+
+    # SSH and security
     ~/.ssh/config: config/ssh/config
     ~/.local/bin/pass-4-ssh.sh: config/ssh-add-pass/pass-4-ssh.sh
     ~/.local/bin/ssh-add-4-pass: config/ssh-add-pass/ssh-add-4-pass
 
+# ============================================================================
+# SYSTEM PACKAGES
+# ============================================================================
 - shell:
-    - description: == Install packages
+    - description: == Install Core System Packages ==
       stdout: true
       stderr: true
       command: |
@@ -46,9 +67,9 @@
           ripgrep \
           ssh \
           webext-browserpass \
-          wget \
+          wget
 
-    - description: == Install Dev packages ==
+    - description: == Install Development Packages ==
       stdout: true
       stderr: true
       command: |
@@ -61,8 +82,8 @@
           clang clang-tidy clang-format \
           cmake \
           cmake-curses-gui \
-          doxygen \
           direnv \
+          doxygen \
           ffmpeg \
           flex \
           golang \
@@ -95,113 +116,168 @@
           python3-pytest \
           python3-pynvim \
           software-properties-common \
-          unzip \
+          unzip
 
-    - [sudo snap install spotify, Install Spotify]
-    - [sudo snap install aws-cli --classic, Install AWS-cli]
+    # ============================================================================
+    # DEVELOPMENT TOOLS
+    # ============================================================================
     - description: == Install Rust Toolchain ==
       stdout: true
       command: |
-        [[ -x `which rustup` ]] || sh <(curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf) -y --no-modify-path
+        command -v rustup >/dev/null 2>&1 || \
+          sh <(curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf) -y --no-modify-path
 
-    - description: == Install UV for Python ==
-      command: |
-        [[ -x `which uv` ]] || curl -LsSf https://astral.sh/uv/install.sh | sh
-
-    - description: == Install Nerd Fonts ==
+    - description: == Install UV (Python Package Manager) ==
       stdout: true
       command: |
-        [[ -f ~/.fonts/JetBrainsMonoNLNerdFontMono-Regular.ttf ]] ||
-        (
+        command -v uv >/dev/null 2>&1 || \
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    - description: == Install JetBrains Mono Nerd Font ==
+      stdout: true
+      command: |
+        if [[ ! -f ~/.fonts/JetBrainsMonoNLNerdFontMono-Regular.ttf ]]; then
           mkdir -p ~/.fonts
-          wget -qO- "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz" | tar xvJ -C ~/.fonts/
+          wget -qO- "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz" | \
+            tar xvJ -C ~/.fonts/
           fc-cache -fv ~/.fonts
-        )
+        fi
 
-    - description: == Install NVim ==
+    - description: == Install NeoVim (Latest AppImage) ==
       stdout: true
       command: |
-        curl -# -L --output "$HOME/.local/bin/nvim.appimage" https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+        curl -# -L --output "$HOME/.local/bin/nvim.appimage" \
+          https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
         chmod u+x "$HOME/.local/bin/nvim.appimage"
 
-    - description: == Install LaziGit ==
+    - description: == Install LazyGit ==
       stdout: true
       command: |
-        [[ -f ~/.local/bin/lazygit ]] || (
-          LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+        if [[ ! -f ~/.local/bin/lazygit ]]; then
+          LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \
+            grep -Po '"tag_name": "v\K[^"]*')
           mkdir -p ~/.local/share/lazygit
-          wget -qO- "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" | tar xvz -C ~/.local/share/lazygit
-          ( cd ~; install ~/.local/share/lazygit/lazygit ~/.local/bin/ )
-        )
+          wget -qO- "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" | \
+            tar xvz -C ~/.local/share/lazygit
+          install ~/.local/share/lazygit/lazygit ~/.local/bin/
+        fi
 
-    - description: == Install Powerline
+    - description: == Install Powerline Shell ==
       stdout: true
       stderr: true
       command: |
         sudo apt install -y powerline-gitstatus python3-powerline fonts-powerline
-        [[ -d /usr/src/powerline-shell ]] || (
+        if [[ ! -d /usr/src/powerline-shell ]]; then
           sudo git clone https://github.com/b-ryan/powerline-shell /usr/src/powerline-shell
           cd /usr/src/powerline-shell && sudo python setup.py install
-        )
+        fi
 
-    - description: == Install FZF
+    - description: == Install FZF (Fuzzy Finder) ==
       stdout: true
       command: |
-        [[ -f ~/dev/src/github/fzf ]] || git clone --branch v0.64.0 https://github.com/junegunn/fzf.git ~/dev/src/github/fzf
-        [[ -f ~/dev/src/github/fzf/bin/fzf ]] || make -C ~/dev/src/github/fzf install
-        command -v fzf || (cd ~/dev/src/github/fzf && ./install --key-bindings --completion --no-update-rc)
+        if [[ ! -d ~/dev/src/github/fzf ]]; then
+          git clone --branch v0.64.0 https://github.com/junegunn/fzf.git ~/dev/src/github/fzf
+        fi
+        if [[ ! -f ~/dev/src/github/fzf/bin/fzf ]]; then
+          make -C ~/dev/src/github/fzf install
+        fi
+        command -v fzf >/dev/null 2>&1 || \
+          (cd ~/dev/src/github/fzf && ./install --key-bindings --completion --no-update-rc)
 
-    - description: == Install Docker
+    - description: == Install Docker ==
       stdout: true
       stderr: true
       command: |
-        if [[ ! -f /etc/apt/sources.list.d/docker.list ]]; then \
+        if [[ ! -f /etc/apt/sources.list.d/docker.list ]]; then
+          # Add Docker's official GPG key and repository
           sudo mkdir -m 0755 -p /etc/apt/keyrings
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+            sudo gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
+
           echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
             $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+          # Install Docker packages
           sudo apt update
           sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-          sudo groupadd docker
+
+          # Add user to docker group
+          sudo groupadd docker 2>/dev/null || true
           sudo usermod -aG docker $USER
           newgrp docker
         fi
 
-    - description: Password-store
+    # ============================================================================
+    # SECURITY AND CREDENTIALS
+    # ============================================================================
+    - description: == Setup Password Store ==
       stdout: true
       command: |
-        [[ -d ~/.password-store/ ]] || (
-          echo "== Grab your github Token for authentification ! =="
+        if [[ ! -d ~/.password-store/ ]]; then
+          echo "== Grab your GitHub token for authentication! =="
           git clone https://nonifier@github.com/nonifier/password-store.git ~/.password-store/
           pass git remote set-url origin git@github.com:nonifier/password-store.git
-        )
+        fi
 
-    - description: Password-store host app for Firefox
+    - description: == Install Password Store Host App for Firefox ==
       stdout: true
       command: |
-        [[ -f ~/.mozilla/native-messaging-hosts/passff.py ]] || (curl -sSL github.com/passff/passff-host/releases/latest/download/install_host_app.sh | bash -s -- firefox)
+        [[ -f ~/.mozilla/native-messaging-hosts/passff.py ]] || \
+          curl -sSL github.com/passff/passff-host/releases/latest/download/install_host_app.sh | bash -s -- firefox
 
-    - description: Trust Key
+    - description: == Import and Trust GPG Key ==
       stdout: true
       command: |
-        [[ -f ~/.gnupg/woam@nonifier.com.priv ]] || echo "Please install ~/.gnupg/woam@nonifier.com.priv"
-        [[ -f ~/.gnupg/woam@nonifier.com.priv ]] && gpg --import ~/.gnupg/woam@nonifier.com.priv && echo $(gpg --list-keys | rg -B1 woam@nonifier | head -1 | tr -d '[:space:]'):6: | gpg --import-ownertrust
+        if [[ ! -f ~/.gnupg/woam@nonifier.com.priv ]]; then
+          echo "WARNING: Please install ~/.gnupg/woam@nonifier.com.priv"
+        else
+          gpg --import ~/.gnupg/woam@nonifier.com.priv
+          echo $(gpg --list-keys | rg -B1 woam@nonifier | head -1 | tr -d '[:space:]'):6: | gpg --import-ownertrust
+        fi
 
-    - description: SSH Setup
+    - description: == Setup SSH Keys ==
       stdout: true
       command: |
-        mkdir -p ~/.ssh/{nonifier,prophesee} # Creating SSH folders
-        chmod 0700 ~/.ssh/{nonifier,prophesee} # Setting permissions
-        [[ -f ~/.ssh/nonifier/id_rsa ]] || (pass ssh/id_rsa.priv > ~/.ssh/nonifier/id_rsa && chmod 600 ~/.ssh/nonifier/id_rsa)
+        # Create SSH directories with proper permissions
+        mkdir -p ~/.ssh/{nonifier,prophesee}
+        chmod 0700 ~/.ssh/{nonifier,prophesee}
+
+        # Extract SSH keys from password-store
+        if [[ ! -f ~/.ssh/nonifier/id_rsa ]]; then
+          pass ssh/id_rsa.priv > ~/.ssh/nonifier/id_rsa
+          chmod 600 ~/.ssh/nonifier/id_rsa
+        fi
         [[ -f ~/.ssh/nonifier/id_rsa.pub ]] || pass ssh/id_rsa.pub > ~/.ssh/nonifier/id_rsa.pub
-        [[ -f ~/.ssh/prophesee/id_ed25519 ]] || (pass prophesee/ssh/id_ed25519.priv > ~/.ssh/prophesee/id_ed25519 && chmod 600 ~/.ssh/prophesee/id_ed25519)
+
+        if [[ ! -f ~/.ssh/prophesee/id_ed25519 ]]; then
+          pass prophesee/ssh/id_ed25519.priv > ~/.ssh/prophesee/id_ed25519
+          chmod 600 ~/.ssh/prophesee/id_ed25519
+        fi
         [[ -f ~/.ssh/prophesee/id_ed25519.pub ]] || pass prophesee/ssh/id_ed25519.pub > ~/.ssh/prophesee/id_ed25519.pub
+
+        # Extract VPN configuration
         [[ -f ~/openvpn.config ]] || pass prophesee/vpn/openvpn.config > ~/openvpn.config
 
-    - description: Slack
+    # ============================================================================
+    # OPTIONAL APPLICATIONS
+    # ============================================================================
+    - description: == Install Spotify ==
+      stdout: true
+      command: sudo snap install spotify
+
+    - description: == Install AWS CLI ==
+      stdout: true
+      command: sudo snap install aws-cli --classic
+
+    - description: == Install Slack ==
       stdout: true
       stderr: true
       command: |
-        curl --fail --silent --show-error --location "https://downloads.slack-edge.com/desktop-releases/linux/x64/4.45.69/slack-desktop-4.45.69-amd64.deb" > /tmp/slack.deb
-        sudo apt install -y /tmp/slack.deb
-        rm /tmp/slack.deb
+        if ! command -v slack >/dev/null 2>&1; then
+          SLACK_DEB="/tmp/slack.deb"
+          curl --fail --silent --show-error --location \
+            "https://downloads.slack-edge.com/desktop-releases/linux/x64/4.45.69/slack-desktop-4.45.69-amd64.deb" \
+            -o "$SLACK_DEB"
+          sudo apt install -y "$SLACK_DEB"
+          rm -f "$SLACK_DEB"
+        fi
