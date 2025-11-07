@@ -1,25 +1,23 @@
 #! /bin/bash
 
-
 ## Export all functions in this file so that sub-shell have access to them
-set -a 
-
+set -a
 
 function ssh-start-agent() {
-    eval `ssh-agent`
+    eval $(ssh-agent)
     empty -f ssh-add
-    pass show ssh/id_rsa | head -n1 | empty -s 
+    pass show ssh/id_rsa | head -n1 | empty -s
 }
 
 function urlencode() {
     # urlencode <string>
     local length="${#1}"
-    for (( i = 0; i < length; i++ )); do
+    for ((i = 0; i < length; i++)); do
         local c="${1:i:1}"
         case $c in
-            [a-zA-Z0-9.~_-]) printf "$c" ;;
-            *) printf '%s' "$c" | xxd -p -c1 |
-                   while read c; do printf '%%%s' "$c"; done ;;
+        [a-zA-Z0-9.~_-]) printf "$c" ;;
+        *) printf '%s' "$c" | xxd -p -c1 |
+            while read c; do printf '%%%s' "$c"; done ;;
         esac
     done
     printf '\n'
@@ -33,13 +31,13 @@ function _urldecode() {
 }
 
 function urldecode() {
-    
+
     if [[ "$#" -eq 0 ]]; then
         while read line; do
             _urldecode "$line"
         done
-    else 
-        while (( $# )); do
+    else
+        while (($#)); do
             _urldecode $1
             shift
         done
@@ -47,21 +45,20 @@ function urldecode() {
 }
 
 function timestamp2human() {
-    for var in "$@"
-    do
-        echo "$var : "+`date -d @$var -u`
+    for var in "$@"; do
+        echo "$var : "+$(date -d @$var -u)
     done
 }
 
 function time2human() {
-    for var in "$@"
-    do
-        echo "$var : "+`date -d @$var -u +%H:%M:%S`
+    for var in "$@"; do
+        echo "$var : "+$(date -d @$var -u +%H:%M:%S)
     done
 }
 
 function jmespath_filter() {
-    FILTER=$1; if [ ! $FILTER ]; then FILTER="*"; fi
+    FILTER=$1
+    if [ ! $FILTER ]; then FILTER="*"; fi
     python -c "import sys;import json;import jmespath; print(json.dumps(jmespath.search('$FILTER', json.loads(sys.stdin.read()))))" | json_pp | highlight -S json -O ansi
 }
 
@@ -71,18 +68,17 @@ function json_filter() {
 
 # call this function from prompt then customize your terminal colors how you like in the terminal/preference/settings
 # colors will change so you can see what they look like in the terminal
-function display_colors (){
-	echo -e "\033[0mCOLOR_NC\tCOLOR_NO_COLOR"
-	echo -e "\033[0;30mCOLOR_BLACK\t\033[1;30mCOLOR_BRIGHT_BLACK"
-	echo -e "\033[0;31mCOLOR_RED\t\033[1;31mCOLOR_BRIGHT_RED"
-	echo -e "\033[0;32mCOLOR_GREEN\t\033[1;32mCOLOR_BRIGHT_GREEN"
-	echo -e "\033[0;33mCOLOR_YELLOW\t\033[1;33mCOLOR_BRIGHT_YELLOW"
-	echo -e "\033[0;34mCOLOR_BLUE\t\033[1;34mCOLOR_BRIGHT_BLUE"
-	echo -e "\033[0;35mCOLOR_PURPLE\t\033[1;35mCOLOR_BRIGHT_PURPLE"
-	echo -e "\033[0;36mCOLOR_CYAN\t\033[1;36mCOLOR_BRIGHT_CYAN"
-	echo -e "\033[0;37mCOLOR_WHITE\t\033[1;37mCOLOR_BRIGHT_WHITE"
+function display_colors() {
+    echo -e "\033[0mCOLOR_NC\tCOLOR_NO_COLOR"
+    echo -e "\033[0;30mCOLOR_BLACK\t\033[1;30mCOLOR_BRIGHT_BLACK"
+    echo -e "\033[0;31mCOLOR_RED\t\033[1;31mCOLOR_BRIGHT_RED"
+    echo -e "\033[0;32mCOLOR_GREEN\t\033[1;32mCOLOR_BRIGHT_GREEN"
+    echo -e "\033[0;33mCOLOR_YELLOW\t\033[1;33mCOLOR_BRIGHT_YELLOW"
+    echo -e "\033[0;34mCOLOR_BLUE\t\033[1;34mCOLOR_BRIGHT_BLUE"
+    echo -e "\033[0;35mCOLOR_PURPLE\t\033[1;35mCOLOR_BRIGHT_PURPLE"
+    echo -e "\033[0;36mCOLOR_CYAN\t\033[1;36mCOLOR_BRIGHT_CYAN"
+    echo -e "\033[0;37mCOLOR_WHITE\t\033[1;37mCOLOR_BRIGHT_WHITE"
 }
-
 
 function create_postgres_user() {
     NEW_USER=$1
@@ -99,7 +95,7 @@ function virtual_env_workon_or_create() {
     ENV_NAME=$1
     REQUIREMENTS_FILE=$2
     VENV=$(workon | egrep "^$ENV_NAME$")
-    if [ $VENV ]; then 
+    if [ $VENV ]; then
         echo "workon $ENV_NAME"
         workon $ENV_NAME
     else
@@ -117,20 +113,21 @@ function ip_if() {
 }
 
 function reset_if() {
-    sudo ip link set $1 down 
+    # $1 an interface name
+    sudo ip link set $1 down
     sudo ip link set $1 up
 }
 
 function ipv6_if_broadcast() {
     # $1 an address or interface name
-    ping -6 -N name -c1 -I $1 ip6-allnodes 
+    ping -6 -N name -c1 -I $1 ip6-allnodes
 }
 
 function ipv6_if_discover() {
     [ -z $1 ] && (
         echo -e " Parameter <interface> missing."
         echo -e " Usage : \n\t ipv6_if_discover <interface>"
-        echo 
+        echo
         echo -e " # Choose from: "
         ip -br link
         exit 1
@@ -139,14 +136,14 @@ function ipv6_if_discover() {
 }
 
 function usb_if() { ip -j link | jq -r '.[].ifname | select(test("^enx"))'; }
-function usb_reset_if() { reset_if `usb_if`; }
-function usb_ip() { ip_addr `usb_if`; }
-function usb_discover() { ipv6_if_discover `usb_if`; }
+function usb_reset_if() { reset_if $(usb_if); }
+function usb_ip() { ip_addr $(usb_if); }
+function usb_discover() { ipv6_if_discover $(usb_if); }
 
 function wifi_if() { ip -j link | jq -r '.[].ifname | select(test("^wlp"))'; }
-function wifi_reset_if() { reset_if `wifi_if`; }
-function wifi_ip() { ip_addr `wifi_if`; }
-function wifi_discover() { ipv6_if_discover `wifi_if`; }
+function wifi_reset_if() { reset_if $(wifi_if); }
+function wifi_ip() { ip_addr $(wifi_if); }
+function wifi_discover() { ipv6_if_discover $(wifi_if); }
 
 function imx8mqthor96_ip() { usb_discover |& grep imx8 | cut -d\  -f4; }
 
