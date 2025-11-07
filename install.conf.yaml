@@ -86,7 +86,7 @@
           doxygen \
           ffmpeg \
           flex \
-          golang \
+          gh \
           graphviz \
           hdf5-tools \
           libboost-all-dev \
@@ -132,6 +132,14 @@
       command: |
         command -v uv >/dev/null 2>&1 || \
           curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    - description: == Install Golang Toolchain ==
+      stdout: true
+      stderr: true
+      command: |
+        command -v go >/dev/null 2>&1 || \
+          curl -# --fail --show-error --location --output /tmp/go.tar.gz https://dl.google.com/go/go1.25.3.linux-amd64.tar.gz && \
+          mkdir ~/go/go1.25.3 && tar -C ~/go/go1.25.3 -xzf /tmp/go.tar.gz
 
     - description: == Install JetBrains Mono Nerd Font ==
       stdout: true
