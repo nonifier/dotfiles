@@ -43,3 +43,7 @@ function __load_bash_files_from_dir() {
 
 # Custom bash configuration
 __load_bash_files_from_dir "$HOME/.config/bash/*"
+
+## Display Github PRs
+list_PRs_to_review
+list_my_open_PRs

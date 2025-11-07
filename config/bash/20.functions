@@ -154,5 +154,12 @@ function watch_usb_if() {
     watch -d -x bash -c 'usb_ip || (echo "reseting usb..."; usb_reset_if)'
 }
 
+function list_PRs_to_review() {
+    gh search prs --review-requested @me --state open ## List PR i'm requested from
+}
+
+function list_my_open_PRs() {
+    gh search prs --author @me --state open
+}
 
 set +a
