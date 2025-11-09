@@ -1,0 +1,9 @@
+config/claude/debug/**
+config/claude/projects/**
+config/claude/shell-snapshots/**
+config/claude/statsig/**
+config/claude/todos/**
+config/claude/.credentials.json
+config/claude/history.jsonl
+
+

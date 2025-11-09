@@ -1,0 +1,32 @@
+{
+    "permissions": {
+        "allow": [
+            "mcp__sequential-thinking__sequentialthinking",
+            "mcp__context7__resolve-library-id",
+            "mcp__context7__get-library-docs",
+            "Bash(gh search prs --help:*)",
+            "Bash(gh pr list --help:*)",
+            "WebSearch",
+            "WebFetch(domain:code.claude.com)",
+            "Bash(claude mcp add --help:*)",
+            "Bash(claude mcp:*)"
+        ]
+    },
+    "mcpServers": {
+        "context7": {
+            "type": "http",
+            "url": "https://mcp.context7.com/mcp",
+            "headers": {
+                "CONTEXT7_API_KEY": "ctx7sk-5d0b328a-bca9-4ad8-b710-e4eb9925e2b8"
+            }
+        },
+        "sequential-thinking": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-sequential-thinking"
+            ]
+        }
+    },
+    "alwaysThinkingEnabled": true
+}
