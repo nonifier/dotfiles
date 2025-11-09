@@ -79,3 +79,50 @@ tyr_jobs_data_sets_view() {
 tyr_jobs_metrics_view() {
     jq -r '.jobs[] | . as $j | .metrics[] + $j | [ .id, .state, .instance.name, .type, .duration, .created_at, .updated_at] | @tsv ' | column -t
 }
+
+navitia_url() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: navitia_url { sand[box] | c[us[tomer]] | p[rod[uction]] }" 1>&2
+        return 1
+    fi
+
+    local platform=$(pass pro/hove/playground.navitia.io | grep -o ".*$1.*: ")
+
+    if [[ -z "$platform" ]]; then
+        echo "Platform not found with pattern: $1"
+        return 2
+    fi
+
+    if [[ $(wc -l <<<"$platform") -gt "1" ]]; then
+        echo "Multiple platforms found using pattern - \"$1\" :"
+        echo "$platform"
+        return 2
+    fi
+
+    pass pro/hove/playground.navitia.io | grep "$platform" | sed "s/${platform}//"
+}
+
+navitia_coverages() {
+    http --verify=no "$1/v1/coverage" | jq -r '.regions[].id'
+}
+
+navitia_jormungandr_version() {
+    http --verify=no "$1/v1/status" | jq -r '.jormungandr_version'
+}
+
+navitia_kraken_version() {
+    http --verify=no "$1/v1/coverage/$2/status" | jq -r '.status.kraken_version'
+}
+
+navitia_versions() {
+    local url
+    url="$(navitia_url "$1")"
+
+    echo "-- Platform Navitia No Coverage --"
+    echo "Jormun $(navitia_jormungandr_version "$url")"
+
+    echo "-- Kraken Versions --"
+    for c in $(navitia_coverages "$url"); do
+        echo "$c $(navitia_kraken_version "$url" "$c")" | column -t
+    done
+}
