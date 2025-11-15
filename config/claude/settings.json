@@ -17,7 +17,7 @@
             "type": "http",
             "url": "https://mcp.context7.com/mcp",
             "headers": {
-                "CONTEXT7_API_KEY": "ctx7sk-5d0b328a-bca9-4ad8-b710-e4eb9925e2b8"
+                "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
             }
         },
         "sequential-thinking": {
@@ -26,6 +26,16 @@
                 "-y",
                 "@modelcontextprotocol/server-sequential-thinking"
             ]
+        },
+        "playwright": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "@playwright/mcp@latest",
+                "--browser",
+                "firefox"
+            ],
+            "env": {}
         }
     },
     "alwaysThinkingEnabled": true
