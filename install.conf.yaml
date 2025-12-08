@@ -269,11 +269,13 @@
         # Extract VPN configuration
         [[ -f ~/openvpn.config ]] || pass prophesee/vpn/openvpn.config > ~/openvpn.config
 
-    - description: == Substitute secrets ==
+    - description: == Install Claude ==
       stdout: true
+      stderr: true
       command: |
-        cp config/claude/settings.local.json /tmp/
-        CONTEXT7_API_KEY=`pass app/context7` envsubst < /tmp/settings.local.json > ~/.claude/settings.local.json
+        curl -fsSL https://claude.ai/install.sh | bash
+        cp config/claude/settings.json /tmp/
+        CONTEXT7_API_KEY=`pass web/context7` envsubst < /tmp/settings.json > ~/.claude/settings.json
 
     # ============================================================================
     # OPTIONAL APPLICATIONS
