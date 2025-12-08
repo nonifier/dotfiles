@@ -11,3 +11,7 @@ compile_commands.json
 ./dev/imx8/imx-yocto-bsp/bld-xwayland/tmp/*
 
 pyproject.toml 
+
+CLAUDE.md
+.claude
+.mcp.json

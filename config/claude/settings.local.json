@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:microsoft.github.io)",
+      "WebFetch(domain:langserver.org)",
+      "WebFetch(domain:www.anthropic.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:skywork.ai)",
+      "WebFetch(domain:www.lazyvim.org)",
+      "WebFetch(domain:ravitemer.github.io)",
+      "WebFetch(domain:tip.golang.org)",
+      "WebFetch(domain:mcpservers.org)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
