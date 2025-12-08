@@ -2,4 +2,4 @@
 
 # GO lang
 export GOROOT=$HOME/go/go1.25.3/go
-PATH+=:$GOROOT/bin
+PATH+=:$GOROOT/bin:$HOME/go/bin
