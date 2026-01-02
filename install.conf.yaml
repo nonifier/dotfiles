@@ -140,9 +140,10 @@
       stdout: true
       stderr: true
       command: |
-        command -v go >/dev/null 2>&1 || \
+        command -v go >/dev/null 2>&1 || {
           curl -# --fail --show-error --location --output /tmp/go.tar.gz https://dl.google.com/go/go1.25.3.linux-amd64.tar.gz && \
-          mkdir ~/go/go1.25.3 && tar -C ~/go/go1.25.3 -xzf /tmp/go.tar.gz
+          mkdir -p ~/go/go1.25.3 && tar -C ~/go/go1.25.3 -xzf /tmp/go.tar.gz
+        }
 
     - description: == Install JetBrains Mono Nerd Font ==
       stdout: true
@@ -275,7 +276,7 @@
       command: |
         curl -fsSL https://claude.ai/install.sh | bash
         cp config/claude/settings.json /tmp/
-        CONTEXT7_API_KEY=`pass web/context7` envsubst < /tmp/settings.json > ~/.claude/settings.json
+        CONTEXT7_API_KEY=`pass web/context7.com/token-user-config` envsubst < /tmp/settings.json > ~/.claude/settings.json
 
     # ============================================================================
     # OPTIONAL APPLICATIONS
