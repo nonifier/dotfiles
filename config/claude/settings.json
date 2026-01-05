@@ -8,9 +8,13 @@
             "Bash(gh pr list --help:*)",
             "WebSearch",
             "WebFetch(domain:code.claude.com)",
-            "Bash(claude mcp add --help:*)",
-            "Bash(claude mcp:*)"
-        ]
+            "Bash(claude mcp:*)",
+            "Bash(cat:*)",
+            "Bash(cp:*)"
+        ],
+        "deny": [],
+        "ask": [],
+        "defaultMode": "plan"
     },
     "enabledPlugins": {
         "security-guidance@claude-code-plugins": true,
