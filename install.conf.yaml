@@ -188,7 +188,7 @@
       stdout: true
       command: |
         if [[ ! -d ~/dev/src/github/fzf ]]; then
-          git clone --branch v0.64.0 https://github.com/junegunn/fzf.git ~/dev/src/github/fzf
+          git clone --branch v0.67.0 https://github.com/junegunn/fzf.git ~/dev/src/github/fzf
         fi
         if [[ ! -f ~/dev/src/github/fzf/bin/fzf ]]; then
           make -C ~/dev/src/github/fzf install
@@ -276,7 +276,8 @@
       command: |
         curl -fsSL https://claude.ai/install.sh | bash
         cp config/claude/settings.json /tmp/
-        CONTEXT7_API_KEY=`pass web/context7.com/token-user-config` envsubst < /tmp/settings.json > ~/.claude/settings.json
+        claude mcp add context7 --scope user -- npx -y @upstash/context7-mcp --api-key `pass web/context7.com/token-user-config`
+        claude mcp add sequential-thinking --scope user -- npx -y @modelcontextprotocol/server-sequential-thinking
 
     # ============================================================================
     # OPTIONAL APPLICATIONS
@@ -288,6 +289,10 @@
     - description: == Install AWS CLI ==
       stdout: true
       command: sudo snap install aws-cli --classic
+
+    - description: == Install Ghostty ==
+      stdout: true
+      command: sudo snap install ghostty --classic
 
     - description: == Install Slack ==
       stdout: true

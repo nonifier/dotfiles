@@ -5,6 +5,8 @@ if [[ ! "$PATH" == */home/nonif/dev/src/github/fzf/bin* ]]; then
   PATH="${PATH:+${PATH}:}/home/nonif/dev/src/github/fzf/bin"
 fi
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
 eval "$(fzf --bash)"
 
 # FZF as bash completion engine
@@ -12,4 +14,5 @@ eval "$(fzf --bash)"
   git clone https://github.com/lincheney/fzf-tab-completion.git ~/dev/src/github/fzf-tab-completion
 __load_file_if_exists ~/dev/src/github/fzf-tab-completion/bash/fzf-bash-completion.sh
 bind -x '"\t": fzf_bash_completion'
+
 
