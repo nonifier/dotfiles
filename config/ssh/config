@@ -1,6 +1,6 @@
-Host *
-    AddKeysToAgent yes
-    IdentitiesOnly yes
-    IdentityFile ~/.ssh/nonifier/id_rsa
-    LogLevel INFO
+# Host *
+    # AddKeysToAgent yes
+    # IdentitiesOnly yes
+    # IdentityFile ~/.ssh/nonifier/id_rsa
+    # LogLevel INFO
 
