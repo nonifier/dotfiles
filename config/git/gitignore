@@ -15,3 +15,5 @@ pyproject.toml
 CLAUDE.md
 .claude
 .mcp.json
+./config/claude/backups/*
+./config/claude/tasks/*
