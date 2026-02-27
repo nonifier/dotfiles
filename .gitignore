@@ -10,3 +10,4 @@ config/claude/todos/**
 config/claude/telemetry/**
 config/claude/plugins/**
 config/claude/*cache*
+config/jj/repos/**
