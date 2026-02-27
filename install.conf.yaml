@@ -30,6 +30,7 @@
     ~/.gdbinit: config/gdbinit
     ~/.pdbrc.py: config/pdbrc.py
     ~/.config/lazygit: config/lazygit
+    ~/.config/jj: config/jj
 
     # Git configuration
     ~/.gitconfig: config/git/gitconfig

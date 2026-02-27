@@ -1,0 +1,26 @@
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
+
+[colors]
+# Highlight hunks with background
+"diff removed token" = { bg = "#221111", underline = false }
+"diff added token" = { bg = "#002200", underline = false }
+"diff token" = { reverse = true, underline = false }         # Alternatively, swap colors
+
+[ui]
+# default-command = ["log", "--reversed"]
+graph.style = "curved" # Possible values: "curved" (default), "square", "ascii", "ascii-large"
+
+# Builtin formats: ":color-words" (default), ":git",
+#                  ":summary", ":stat", ":types", ":name-only"
+diff-formatter = ":color-words"
+
+[templates]
+log = "builtin_log_comfortable"
+# log = "builtin_log_compact_full_description"
+
+[user]
+name = "Nonifier"
+email = "olivier.georget@gmail.com"
+
+[remotes.origin]
+auto-track-bookmarks = "*"
