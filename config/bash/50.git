@@ -1,2 +1,3 @@
 # Load Git auto completion
-__load_file_if_exists /Library/Developer/CommandLineTools/usr/share/git-core/git-prompt.sh
+__load_file_if_exists /usr/lib/git-core/git-sh-prompt
+__load_file_if_exists /usr/share/bash-completion/completions/git 

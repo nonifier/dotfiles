@@ -14,3 +14,5 @@ _gh_completion() {
 complete -F _gh_completion -o default gh;
 
 [[ -x `which uv` ]] && eval "$(uv generate-shell-completion bash)"
+
+[[ -x `which jj` ]] && source <(jj util completion bash)
