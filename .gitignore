@@ -1,13 +1,14 @@
+config/claude/*cache*
+config/claude/backups/**
 config/claude/.credentials.json
 config/claude/debug/**
 config/claude/file-history/**
 config/claude/history.jsonl
 config/claude/plans/**
+config/claude/plugins/**
 config/claude/projects/**
 config/claude/shell-snapshots/**
 config/claude/statsig/**
-config/claude/todos/**
 config/claude/telemetry/**
-config/claude/plugins/**
-config/claude/*cache*
+config/claude/todos/**
 config/jj/repos/**
